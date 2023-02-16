@@ -1,3 +1,5 @@
+@import "variables.scss";
+
 .app-container {
 	display: flex;
 	flex-direction: column;
@@ -6,14 +8,14 @@
 .main-page {
 	display: flex;
 	min-height: 800px;
-	margin-top: 56px;
+	margin-top: $topbar-height + 1;
 }
 
 .left-panel {
 	border: solid 1px black;
 	height: auto;
 	position: fixed;
-	width: 260px;
+	width: $leftpanel-width;
 	height: 100%;
 }
 
@@ -22,7 +24,7 @@
 	height: auto;
 	width: 100%;
 	padding: 15px;
-	margin-left: 261px;
+	margin-left: $leftpanel-width + 1;
 }
 
 
