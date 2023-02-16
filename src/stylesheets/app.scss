@@ -1,0 +1,18 @@
+.app-container {
+	display: flex;
+	min-height: 800px;
+	padding: 5px;
+}
+
+.left-panel {
+	border: solid 1px black;
+	height: auto;
+}
+
+.main-content {
+	border: solid 1px black;
+	height: auto;
+	width: 100%;
+}
+
+
