@@ -1,18 +1,30 @@
+@import "variables.scss";
+
 .app-container {
 	display: flex;
+	flex-direction: column;
+}
+
+.main-page {
+	display: flex;
 	min-height: 800px;
-	padding: 5px;
+	margin-top: $topbar-height + 1;
 }
 
 .left-panel {
 	border: solid 1px black;
 	height: auto;
+	position: fixed;
+	width: $leftpanel-width;
+	height: 100%;
 }
 
 .main-content {
 	border: solid 1px black;
 	height: auto;
 	width: 100%;
+	padding: 15px;
+	margin-left: $leftpanel-width + 1;
 }
 
 

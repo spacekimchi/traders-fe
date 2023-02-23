@@ -1,0 +1,11 @@
+@import "variables.scss";
+
+.top-bar {
+	position: fixed;
+	top: 0;
+	left: 0;
+	background-color: white;
+	border: solid 1px black;
+	height: $topbar-height;
+	width: 100%;
+}
