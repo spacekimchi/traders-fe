@@ -1,5 +1,4 @@
-
-export default function WeeklyStats() {
+export default function TimeRangeStats() {
 	return (
 		<div>
 			weekly stats
