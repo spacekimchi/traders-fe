@@ -1,0 +1,12 @@
+@import "variables.scss";
+
+.weekday {
+	height: 150px;
+	width: 150px;
+	border: solid 1px black;
+}
+
+.week-container {
+	display: flex;
+}
+

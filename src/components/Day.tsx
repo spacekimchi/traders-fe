@@ -6,7 +6,7 @@ interface dayProps {
 	trades: Array<{ instrument: string, action: string, quantity: number, time: number, commission: number, account_display_name: string }>;
 }
 
-export default function Day(props: dayProps) {
+export default function Day(props: any) {
 	/* 
 	 * Stats to track
 	 * gross pnl
@@ -41,16 +41,16 @@ export default function Day(props: dayProps) {
 	 *  - shortest winning trade time
 	 *  - longest winning trade time
 	 * 
-     */
+	 */
 	//const [stats, setStats] = useState(props.trades);
 
 	let trades = getTrades();
 
 	function getTrades() {
-		let sortedTrades = props.trades.sort((a, b) => a.time - b.time);
+		let sortedTrades = props.trades.sort((a: any, b: any) => a.time - b.time);
 		let curTrades: { [key: string]: any } = {};
-		sortedTrades.forEach((trade) => {
-			console.log("trade",trade.instrument);
+		sortedTrades.forEach((trade: any) => {
+			console.log("trade", trade.instrument);
 			const name = trade.instrument;
 			if (name in curTrades) {
 				if (curTrades[name].trades.empty()) {
