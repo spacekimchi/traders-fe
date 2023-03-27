@@ -16,7 +16,6 @@ function App() {
 				return response.json();
 			})
 			.then(data => {
-				console.log('maybe do it in here');
 				setTrades(data);
 			});
 	}, []);
