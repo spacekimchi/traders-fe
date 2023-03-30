@@ -8,10 +8,21 @@ interface tradesProps {
 	trades: Array<Trade>;
 }
 
-interface Trade {id: number, account_id: number, commission: number, entry_time: number, exit_time: number, instrument: string, pnl: number, short: boolean
+interface Trade {
+	id: number, account_id: number, commission: number, entry_time: number, exit_time: number, instrument: string, pnl: number, short: boolean
 }
 
-export default function Month(props: tradesProps) {
+export default function Month(props: any) {
+	const [trades, setTrades] = useState([]);
+	useEffect(() => {
+		fetch("http://127.0.0.1:8000/trades")
+			.then(response => {
+				return response.json();
+			})
+			.then(data => {
+				setTrades(data);
+			});
+	}, []);
 	const MONTHS: { [key: string]: number } = {
 		0: 31,
 		1: 28,
@@ -45,7 +56,7 @@ export default function Month(props: tradesProps) {
 		const fdDay = firstDay.getDay();
 		const weeks = [];
 		let tradesByDay: { [key: string]: Trade[] } = {};
-		props.trades.forEach((trade: Trade) => {
+		trades.forEach((trade: Trade) => {
 			const day = Math.floor(trade.entry_time);
 			if (!(day in tradesByDay)) {
 				tradesByDay[day] = [trade];

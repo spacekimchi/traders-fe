@@ -5,27 +5,20 @@ import Day from './components/Day';
 import Week from './components/Week';
 import Month from './components/Month';
 import Year from './components/Year';
+import Login from './components/Login';
+import Signup from './components/Signup';
 import './stylesheets/app.scss';
 import { Routes, Route, Link } from "react-router-dom";
 
 function App() {
-	const [trades, setTrades] = useState([]);
-	useEffect(() => {
-		fetch("http://127.0.0.1:8000/trades")
-			.then(response => {
-				return response.json();
-			})
-			.then(data => {
-				setTrades(data);
-			});
-	}, []);
-
 	const routes = (
 		<Routes>
-			<Route path="/day" element={<Day trades={trades} />} />
-			<Route path="/week" element={<Week trades={trades} />} />
-			<Route path="/month" element={<Month trades={trades} />} />
-			<Route path="/year" element={<Year trades={trades} />} />
+			<Route path="/login" element={<Login />} />
+			<Route path="/signup" element={<Signup />} />
+			<Route path="/day" element={<Day />} />
+			<Route path="/week" element={<Week />} />
+			<Route path="/month" element={<Month />} />
+			<Route path="/year" element={<Year />} />
 		</Routes>
 	);
 	const loading = (
@@ -54,9 +47,7 @@ function App() {
 					</div>
 				</div>
 				<div className="main-content">
-					{
-						trades.length ? routes : loading
-					}
+					{routes}
 				</div>
 			</div>
 		</div>
