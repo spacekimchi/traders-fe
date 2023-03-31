@@ -10,9 +10,8 @@ export default function Login(props: any) {
 	const [email, setEmail] = useState('');
 	const [errorMessage, setErrorMessage] = useState('');
 	function handleSubmit(e: React.FormEvent) {
-		console.log('creating user');
 		e.preventDefault();
-		fetch("http://127.0.0.1:8000/users", {
+		fetch("/api/users", {
 			method: 'POST',
 			body: JSON.stringify({
 				username: username,
@@ -30,12 +29,10 @@ export default function Login(props: any) {
 				throw new Error(response.statusText);
 			})
 			.then((data) => {
-				console.log('data: ', data);
 				navigate("/month")
 			})
 			.catch((err) => {
 				setErrorMessage(err.toString());
-				//console.log('error is: ', err.toString());
 			});
 
 

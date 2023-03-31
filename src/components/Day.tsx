@@ -50,7 +50,6 @@ export default function Day(props: any) {
 		let sortedTrades = props.trades.sort((a: any, b: any) => a.time - b.time);
 		let curTrades: { [key: string]: any } = {};
 		sortedTrades.forEach((trade: any) => {
-			console.log("trade", trade.instrument);
 			const name = trade.instrument;
 			if (name in curTrades) {
 				if (curTrades[name].trades.empty()) {

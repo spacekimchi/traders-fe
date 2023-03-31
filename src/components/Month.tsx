@@ -1,8 +1,7 @@
 import { useEffect, useState } from 'react';
-import TimeRangeStats from './TimeRangeStats';
-import { dir, warn } from 'console';
 import { nanoid } from 'nanoid';
 import '../stylesheets/month.scss';
+import { useCookies } from 'react-cookie';
 
 interface tradesProps {
 	trades: Array<Trade>;
@@ -15,7 +14,7 @@ interface Trade {
 export default function Month(props: any) {
 	const [trades, setTrades] = useState([]);
 	useEffect(() => {
-		fetch("http://127.0.0.1:8000/trades")
+		fetch("/api/trades")
 			.then(response => {
 				return response.json();
 			})
