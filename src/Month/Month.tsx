@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
 import { nanoid } from 'nanoid';
-import '../stylesheets/month.scss';
-import { useCookies } from 'react-cookie';
+import './month.scss';
+import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 interface tradesProps {
 	trades: Array<Trade>;
@@ -12,11 +13,17 @@ interface Trade {
 }
 
 export default function Month(props: any) {
+	const navigate = useNavigate();
 	const [trades, setTrades] = useState([]);
 	useEffect(() => {
-		fetch("/api/trades")
+		fetch("/api/trades/month")
 			.then(response => {
-				return response.json();
+				if (response.ok) {
+					return response.json();
+				} else {
+					console.log('response: ', response);
+					navigate('/login');
+				}
 			})
 			.then(data => {
 				setTrades(data);
@@ -48,6 +55,7 @@ export default function Month(props: any) {
 	const weeks = createCalendar(new Date().getMonth(), new Date().getFullYear());
 
 	function createCalendar(month: number, year: number) {
+		if (!trades.length) { return };
 		const firstDay = new Date(year, month, 1);
 		const firstDayDate = firstDay.getDate();
 		const firstDayExcel = dateToExcel(firstDay);
@@ -84,7 +92,7 @@ export default function Month(props: any) {
 			for (let curDate = prevMonthDays - day; curDate <= prevMonthDays; curDate += 1) {
 				week.push(
 					<div key={nanoid()} className="weekday">
-						{curDate} {dayDict[curDay]}
+						<Link to="/day"> {curDate} {dayDict[curDay]}</Link>
 						{
 							excelDate in tradesByDay ?
 								<div>
@@ -111,7 +119,7 @@ export default function Month(props: any) {
 		while (curDay < 7) {
 			week.push(
 				<div key={nanoid()} className="weekday">
-					{curDate} {dayDict[curDay]}
+					<Link to="/day/{}"> {curDate} {dayDict[curDay]}</Link>
 					{
 						excelDate in tradesByDay ?
 							<div>

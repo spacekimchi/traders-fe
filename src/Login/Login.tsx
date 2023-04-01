@@ -1,35 +1,33 @@
-import '../stylesheets/signup.scss';
-import React, { useState } from 'react';
-import { nanoid } from 'nanoid';
+import './login.scss';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from "react-router-dom";
 
 export default function Login(props: any) {
 	const navigate = useNavigate();
 	const [username, setUsername] = useState('');
 	const [password, setPassword] = useState('');
-	const [email, setEmail] = useState('');
 	const [errorMessage, setErrorMessage] = useState('');
 	function handleSubmit(e: React.FormEvent) {
 		e.preventDefault();
-		fetch("/api/users", {
+		fetch("/api/login", {
 			method: 'POST',
 			body: JSON.stringify({
 				username: username,
 				password: password,
-				email: email,
 			}),
 			headers: {
-				'Content-type': 'application/json; charset=UTF-8'
+				'Content-type': 'application/json;',
 			},
+			credentials: 'include',
 		})
-			.then((response) => {
+			.then((response: any) => {
 				if (response.ok) {
 					return response.json();
 				}
 				throw new Error(response.statusText);
 			})
 			.then((data) => {
-				navigate("/month")
+				navigate("/trade/month")
 			})
 			.catch((err) => {
 				setErrorMessage(err.toString());
@@ -38,13 +36,11 @@ export default function Login(props: any) {
 
 	}
 	return (
-		<div className="signup-container">
+		<div className="login-container">
 			<p>{errorMessage}</p>
 			<form onSubmit={handleSubmit}>
 				<label htmlFor="username">username</label>
 				<input type="text" id="username" name="username" value={username} onChange={(e) => setUsername(e.target.value)} />
-				<label htmlFor="email">email</label>
-				<input type="text" id="email" name="email" value={email} onChange={(e) => setEmail(e.target.value)} />
 				<label htmlFor="password">password</label>
 				<input type="password" id="password" name="password" value={password} onChange={(e) => setPassword(e.target.value)} />
 				<button type="submit">

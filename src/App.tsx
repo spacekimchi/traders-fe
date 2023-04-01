@@ -1,49 +1,55 @@
 import React, { useEffect, useState } from 'react';
-import Calendar from './components/Calendar';
-import TopBar from './components/TopBar';
-import Day from './components/Day';
-import Week from './components/Week';
-import Month from './components/Month';
-import Year from './components/Year';
-import Login from './components/Login';
-import Signup from './components/Signup';
+import TopBar from './TopBar/TopBar';
+import Day from './Day/Day';
+import Week from './Week/Week';
+import Month from './Month/Month';
+import Year from './Year/Year';
+import Login from './Login/Login';
+import Signup from './Signup/Signup';
 import './stylesheets/app.scss';
-import { Routes, Route, Link } from "react-router-dom";
+import { Routes, Route, Link, Navigate } from "react-router-dom";
+
+/*
+ *	/trades => Month View
+ *	/trades/{year, month, week, day}/{2023}/{03}/{31} => Any missing field will default back to Month View
+ */
 
 function App() {
 	const routes = (
 		<Routes>
 			<Route path="/login" element={<Login />} />
 			<Route path="/signup" element={<Signup />} />
-			<Route path="/day" element={<Day />} />
-			<Route path="/week" element={<Week />} />
-			<Route path="/month" element={<Month />} />
-			<Route path="/year" element={<Year />} />
+			<Route path="/trade">
+				<Route path="day" element={<Day />} />
+				<Route path="week" element={<Week />} />
+				<Route path="month" element={<Month />} />
+				<Route path="year" element={<Year />} />
+				<Route path="*" element={<Navigate to="/trade/month" replace />} />
+			</Route>
 		</Routes>
-	);
-	const loading = (
-		<div>loading</div>
 	);
 	return (
 		<div className="app-container">
 			<TopBar />
 			<div className="main-page">
 				<div className="left-panel">
-					<Calendar />
 					<div>
 						<Link to="/">Home</Link>
 					</div>
 					<div>
-						<Link to="/day">Day</Link>
+						<Link to="/profile">Profile</Link>
 					</div>
 					<div>
-						<Link to="/week">Week</Link>
+						<Link to="/trade/day">Day</Link>
 					</div>
 					<div>
-						<Link to="/month">Month</Link>
+						<Link to="/trade/week">Week</Link>
 					</div>
 					<div>
-						<Link to="/year">Year</Link>
+						<Link to="/trade/month">Month</Link>
+					</div>
+					<div>
+						<Link to="/trade/year">Year</Link>
 					</div>
 				</div>
 				<div className="main-content">

@@ -1,4 +1,4 @@
-import '../stylesheets/top-bar.scss';
+import './top-bar.scss';
 import { Link } from "react-router-dom";
 
 export default function TopBar() {

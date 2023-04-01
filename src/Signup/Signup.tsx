@@ -1,29 +1,27 @@
-import '../stylesheets/login.scss';
+import './signup.scss';
 import React, { useState } from 'react';
-import { nanoid } from 'nanoid';
 import { useNavigate } from "react-router-dom";
-import { useCookies } from 'react-cookie';
 
 export default function Login(props: any) {
 	const navigate = useNavigate();
 	const [username, setUsername] = useState('');
 	const [password, setPassword] = useState('');
+	const [email, setEmail] = useState('');
 	const [errorMessage, setErrorMessage] = useState('');
-	const [cookies, setCookie] = useCookies(['id']);
 	function handleSubmit(e: React.FormEvent) {
 		e.preventDefault();
-		fetch("/api/login", {
+		fetch("/api/users", {
 			method: 'POST',
 			body: JSON.stringify({
 				username: username,
 				password: password,
+				email: email,
 			}),
 			headers: {
-				'Content-type': 'application/json;',
+				'Content-type': 'application/json; charset=UTF-8'
 			},
-			credentials: 'include',
 		})
-			.then((response: any) => {
+			.then((response) => {
 				if (response.ok) {
 					return response.json();
 				}
@@ -39,11 +37,13 @@ export default function Login(props: any) {
 
 	}
 	return (
-		<div className="login-container">
+		<div className="signup-container">
 			<p>{errorMessage}</p>
 			<form onSubmit={handleSubmit}>
 				<label htmlFor="username">username</label>
 				<input type="text" id="username" name="username" value={username} onChange={(e) => setUsername(e.target.value)} />
+				<label htmlFor="email">email</label>
+				<input type="text" id="email" name="email" value={email} onChange={(e) => setEmail(e.target.value)} />
 				<label htmlFor="password">password</label>
 				<input type="password" id="password" name="password" value={password} onChange={(e) => setPassword(e.target.value)} />
 				<button type="submit">
