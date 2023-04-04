@@ -2,10 +2,16 @@
 
 .top-bar {
 	position: fixed;
+	display: flex;
+	justify-content: end;
 	top: 0;
 	left: 0;
 	background-color: white;
 	border: solid 1px black;
-	height: $topbar-height;
 	width: 100%;
 }
+
+.top-bar-items {
+	padding: 15px;
+}
+

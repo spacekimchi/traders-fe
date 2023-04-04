@@ -1,8 +1,12 @@
 import { useEffect, useState } from 'react';
+import {tradeParams} from '../utils/types';
 import { nanoid } from 'nanoid';
 import './month.scss';
-import { Link } from "react-router-dom";
+import { Link, useLoaderData } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
+import { getTrades } from '../utils/api';
+
+const fileName = "Month.tsx";
 
 interface tradesProps {
 	trades: Array<Trade>;
@@ -13,22 +17,8 @@ interface Trade {
 }
 
 export default function Month(props: any) {
+	const trades: Trade[] = useLoaderData() as Trade[];
 	const navigate = useNavigate();
-	const [trades, setTrades] = useState([]);
-	useEffect(() => {
-		fetch("/api/trades/month")
-			.then(response => {
-				if (response.ok) {
-					return response.json();
-				} else {
-					console.log('response: ', response);
-					navigate('/login');
-				}
-			})
-			.then(data => {
-				setTrades(data);
-			});
-	}, []);
 	const MONTHS: { [key: string]: number } = {
 		0: 31,
 		1: 28,
@@ -55,6 +45,7 @@ export default function Month(props: any) {
 	const weeks = createCalendar(new Date().getMonth(), new Date().getFullYear());
 
 	function createCalendar(month: number, year: number) {
+		console.log('trying to create calendar');
 		if (!trades.length) { return };
 		const firstDay = new Date(year, month, 1);
 		const firstDayDate = firstDay.getDate();
@@ -154,4 +145,19 @@ export default function Month(props: any) {
 			{weeks}
 		</div>
 	);
+}
+
+export function loader({ request }: any) {
+	const url = new URL(request.url);
+	const tradeParams: { [key: string]: string } = {
+		start_time: url.searchParams.get("start_time") || "",
+		end_time: url.searchParams.get("end_time") || "",
+		short: url.searchParams.get("short") || "",
+		account_names: url.searchParams.get("account_names") || "",
+		include: url.searchParams.get("include") || "",
+	}
+	const queryString = url.searchParams.toString();
+	console.log(`[${fileName}:loader]: searchParams(): `, tradeParams);
+	console.log(`[${fileName}:loader]: queryString: `, queryString);
+	return getTrades(tradeParams);
 }

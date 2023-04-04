@@ -1,0 +1,16 @@
+#!/bin/sh
+
+if [ $# != 1 ]; then
+		echo "Usage: $(basename "$0") <ComponentName>" >&2
+		exit 1
+fi
+if [ ! -d .git ]; then
+		echo "must be run from root of project repository" >&2
+		exit 1
+fi
+
+name="$(printf "%s" "$1")"
+echo "Creating src/$name"
+stylename="$(echo $name | sed --expression 's/\([A-Z]\)/_\L\1/g' --expression 's/^_//')"
+echo "Creating src/$name/$name.tsx and src/$name/$stylename.scss"
+mkdir "src/$name" && touch "src/$name/$name.tsx" && touch "src/$name/$stylename.scss"

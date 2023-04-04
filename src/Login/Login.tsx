@@ -2,6 +2,10 @@ import './login.scss';
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from "react-router-dom";
 
+interface LoginProps {
+	setCurrentUser: Function,
+}
+
 export default function Login(props: any) {
 	const navigate = useNavigate();
 	const [username, setUsername] = useState('');
@@ -27,7 +31,8 @@ export default function Login(props: any) {
 				throw new Error(response.statusText);
 			})
 			.then((data) => {
-				navigate("/trade/month")
+				props.setCurrentUser(data);
+				navigate("/")
 			})
 			.catch((err) => {
 				setErrorMessage(err.toString());

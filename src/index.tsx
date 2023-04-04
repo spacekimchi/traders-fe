@@ -3,17 +3,18 @@ import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
-import { BrowserRouter } from "react-router-dom";
 import { CookiesProvider } from 'react-cookie';
+import { AuthContextProvider } from './utils/AuthContext';
 
 const root = ReactDOM.createRoot(
 	document.getElementById('root') as HTMLElement
 );
+
 root.render(
 	<CookiesProvider>
-		<BrowserRouter>
+		<AuthContextProvider>
 			<App />
-		</BrowserRouter>
+		</AuthContextProvider>
 	</CookiesProvider>
 );
 
