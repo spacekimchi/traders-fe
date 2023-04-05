@@ -1,17 +1,31 @@
 import './trades.scss';
-import { Outlet, useSearchParams, json } from 'react-router-dom';
+import { Outlet, useSearchParams, json, useLoaderData } from 'react-router-dom';
 import { getTrades } from '../utils/api';
-import {tradeParams} from '../utils/types';
+import { tradeParams } from '../utils/types';
 const fileName = "Trades.tsx";
 
 export default function Trades() {
 	console.log("[Trades.tsx]");
+	let trades = useLoaderData();
+	console.log(`[${fileName}] trades: `, trades);
 	let [searchParams, setSearchParams] = useSearchParams();
 	console.log("[Trades.tsx:loader()]: searchParams: ", searchParams);
 	return (
 		<div className="trades-container">
 			<div className="trades-search-container">
-				
+				<div>
+					start_date
+				</div>
+				<div>
+					end_date
+				</div>
+				<div>
+					Accounts
+				</div>
+				<div>
+					short:
+					long:
+				</div>
 			</div>
 			Trades main body
 		</div>

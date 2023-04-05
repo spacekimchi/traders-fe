@@ -6,16 +6,19 @@ import { AuthContext } from '../utils/AuthContext';
 const fileName = "RootLayout.tsx";
 
 export default function RootLayout(props: any) {
+	//const user_id = useLoaderData();
+	//console.log('user_id: ', user_id);
 	const authContext = useContext(AuthContext);
-	console.log(`[${fileName}] authContext: `, authContext);
-	const [hideUserNav, setHideUserNav] = useState(props.currentUser === "0");
+	//authContext.setCurrentUser(user_id);
+	console.log(`[${fileName}] authContext.currentUser: `, authContext.currentUser);
+	const [hideUserNav, setHideUserNav] = useState(authContext.currentUser === "0");
 	useEffect(() => {
-		setHideUserNav(props.currentUser === "0");
-		console.log(`[${fileName}:useEffect()] props.currentUser: `, props.currentUser);
-	}, [props.currentUser]);
+		console.log(`[${fileName}:useEffect()] authContext.currentUser: `, authContext.currentUser);
+		setHideUserNav(authContext.currentUser === "0");
+	}, [authContext.currentUser]);
 	return (
 		<div className="app-container">
-			<TopBar hideUserNav={hideUserNav} setCurrentUser={props.setCurrentUser} />
+			<TopBar hideUserNav={hideUserNav} setCurrentUser={authContext.setCurrentUser} />
 			<div className="main-page">
 				{hideUserNav ? <></> : <UserNav />}
 				<div className="main-content">

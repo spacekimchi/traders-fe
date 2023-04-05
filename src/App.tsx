@@ -17,7 +17,10 @@ import RootLayout from './RootLayout/RootLayout';
 import { loader as tradesLoader } from './Trades/Trades';
 import './stylesheets/app.scss';
 import { getCurrentUser } from './utils/api';
-import { Routes, Route, Link, Navigate, RouterProvider, createBrowserRouter, createRoutesFromElements, useRouteError, useLoaderData } from "react-router-dom";
+import { Routes, Route, Link, Navigate, RouterProvider, createBrowserRouter, createRoutesFromElements, useRouteError, useLoaderData, defer } from "react-router-dom";
+import AuthContext from './utils/AuthContext';
+import { AuthContextProvider } from './utils/AuthContext';
+import {AuthLayout} from './AuthLayout/AuthLayout';
 
 /*
  *	/trades => Month View
@@ -25,21 +28,23 @@ import { Routes, Route, Link, Navigate, RouterProvider, createBrowserRouter, cre
  */
 
 const router = createBrowserRouter(createRoutesFromElements(
-	<Route path="/" element={<RootLayout />} loader={currentUserLoader} errorElement={<ErrorBoundary />} >
-		<Route index element={<Home />} />
-		<Route path="/login" element={<Login />} />
-		<Route path="/signup" element={<Signup />} />
-		<Route path="/journal" element={<Journal />} />
-		<Route path="/calendar" element={<CalendarView />} >
-			<Route index element={<Month />} loader={tradesMonthLoader} />
-			<Route path="month/:start_time/:stop_time" element={<Month />} />
-			<Route path=":trades_view(day|week|month|year)" element={<TradesView />}>
+	<Route element={<AuthLayout />} loader={() => defer({userPromise: currentUserLoader() })}>
+		<Route path="/" element={<RootLayout />} errorElement={<ErrorBoundary />} >
+			<Route index element={<Home />} />
+			<Route path="/login" element={<Login />} />
+			<Route path="/signup" element={<Signup />} />
+			<Route path="/journal" element={<Journal />} />
+			<Route path="/calendar" element={<CalendarView />} >
 				<Route index element={<Month />} loader={tradesMonthLoader} />
-				<Route path=":trades_view(day|week|month|year)/:trades_date" element={<TradesDate />} />
+				<Route path="month/:start_time/:stop_time" element={<Month />} />
+				<Route path=":trades_view(day|week|month|year)" element={<TradesView />}>
+					<Route index element={<Month />} loader={tradesMonthLoader} />
+					<Route path=":trades_view(day|week|month|year)/:trades_date" element={<TradesDate />} />
+				</Route>
 			</Route>
-		</Route>
-		<Route path="/statistics" element={<Statistics />} />
-		<Route path="/trades" element={<Trades />} loader={tradesLoader} errorElement={<ErrorBoundary />} >
+			<Route path="/statistics" element={<Statistics />} />
+			<Route path="/trades" element={<Trades />} loader={tradesLoader} errorElement={<ErrorBoundary />} >
+			</Route>
 		</Route>
 	</Route>
 ));

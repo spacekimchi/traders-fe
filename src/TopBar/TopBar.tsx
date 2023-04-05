@@ -1,7 +1,8 @@
 import './top-bar.scss';
 import { Link, useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { logout } from "../utils/api";
+import { AuthContext } from '../utils/AuthContext';
 
 interface TopBarProps {
 	hideUserNav: boolean,
@@ -22,9 +23,11 @@ export default function TopBar(props: TopBarProps) {
 	function handleLogout(e: any) {
 		e.preventDefault();
 		setDisableLogout(true);
-		logout();
+		let u = logout();
+		console.log('u: ', u);
 		props.setCurrentUser("0");
 		navigate("/");
+		setDisableLogout(false);
 	}
 	return (
 		<div className="top-bar">

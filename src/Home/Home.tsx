@@ -1,4 +1,6 @@
 import './home.scss';
+import { useContext } from 'react';
+import { AuthContext } from '../utils/AuthContext';
 
 const fileName = "Home.tsx";
 
@@ -8,7 +10,8 @@ interface HomeProps {
 }
 
 export default function Home(props: any) {
-	console.log(`[${fileName}:main] currentUser:${props.currentUser}`, props.currentUser);
+	const authContext = useContext(AuthContext);
+	console.log(`[${fileName}:main] currentUser: `, authContext.currentUser);
 	return (
 		<div className="home-container">
 			Home

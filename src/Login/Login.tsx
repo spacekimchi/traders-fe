@@ -1,6 +1,10 @@
 import './login.scss';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { useNavigate } from "react-router-dom";
+import { AuthContext } from '../utils/AuthContext';
+import { login } from '../utils/api';
+
+const fileName = "[Login.tsx:";
 
 interface LoginProps {
 	setCurrentUser: Function,
@@ -8,37 +12,21 @@ interface LoginProps {
 
 export default function Login(props: any) {
 	const navigate = useNavigate();
+	const authContext = useContext(AuthContext);
 	const [username, setUsername] = useState('');
 	const [password, setPassword] = useState('');
 	const [errorMessage, setErrorMessage] = useState('');
 	function handleSubmit(e: React.FormEvent) {
 		e.preventDefault();
-		fetch("/api/login", {
-			method: 'POST',
-			body: JSON.stringify({
-				username: username,
-				password: password,
-			}),
-			headers: {
-				'Content-type': 'application/json;',
-			},
-			credentials: 'include',
-		})
-			.then((response: any) => {
-				if (response.ok) {
-					return response.json();
-				}
-				throw new Error(response.statusText);
-			})
+		login(username, password)
 			.then((data) => {
-				props.setCurrentUser(data);
-				navigate("/")
+				authContext.setCurrentUser(data);
+				navigate("/");
 			})
 			.catch((err) => {
+				console.log(fileName + "error]: err: ", err);
 				setErrorMessage(err.toString());
 			});
-
-
 	}
 	return (
 		<div className="login-container">
