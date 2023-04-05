@@ -3,3 +3,50 @@
 .trades-search-container {
 	display: flex;
 }
+
+.trades-item-container {
+	display: flex;
+	margin-top: 25px;
+}
+
+.trades-item-group {
+	display: flex;
+	margin-right: 50px;
+	width: 100%;
+
+	text-align: center;
+
+	.trades-item__small {
+		max-width: 75px;
+		width: 100%;
+		padding: 2.5px;
+	}
+
+	.trades-item__medium {
+		max-width: 150px;
+		width: 100%;
+		padding: 2.5px;
+	}
+
+	.trades-item__large {
+		max-width: 450px;
+		width: 100%;
+	}
+
+	.trades-item:last-child {
+		margin-left: auto;
+	}
+
+	.green {
+		color: #143306;
+	}
+
+	.red {
+		color: $maximum-red;
+	}
+}
+
+.trades-header {
+	display: flex;
+}
+

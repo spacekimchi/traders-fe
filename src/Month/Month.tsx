@@ -45,7 +45,6 @@ export default function Month(props: any) {
 	const weeks = createCalendar(new Date().getMonth(), new Date().getFullYear());
 
 	function createCalendar(month: number, year: number) {
-		console.log('trying to create calendar');
 		if (!trades.length) { return };
 		const firstDay = new Date(year, month, 1);
 		const firstDayDate = firstDay.getDate();

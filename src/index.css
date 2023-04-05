@@ -1,2 +1,6 @@
 @import-normalize;
 
+body {
+	background-image: url("./assets/img-noise-361x370.png");
+}
+
