@@ -1,18 +1,21 @@
 import './trades.scss';
 import { Outlet, useSearchParams, json, useLoaderData } from 'react-router-dom';
-import { getTrades } from '../utils/api';
+import { getTrades, getAccounts } from '../utils/api';
 import { tradeParams } from '../utils/types';
 import { useState } from 'react';
 import DatePicker from 'react-datepicker';
 import Checkbox from '../Checkbox/Checkbox';
+import Dropdown from '../Dropdown/Dropdown';
 import { nanoid } from 'nanoid';
 import "react-datepicker/dist/react-datepicker.css";
 import { excelToDate, dateToExcel, excelToTime } from '../utils/helpers';
 const fileName = "Trades.tsx";
 
 export default function Trades() {
-	console.log("[Trades.tsx]");
-	let trades = useLoaderData() as any;
+	let loaderData = useLoaderData() as any;
+	const [trades, setTrades] = useState(loaderData.trades);
+	const [filteredTrades, setFilteredTrades] = useState(trades);
+	const [accounts, setAccounts] = useState(loaderData.accounts);
 	const [startDate, setStartDate] = useState(new Date());
 	const [endDate, setEndDate] = useState(new Date());
 	const [shortChecked, setShortChecked] = useState(false);
@@ -21,13 +24,9 @@ export default function Trades() {
 	const [selectedTradeSideDropdown, setSelectedTradeSideDropdown] = useState(0);
 	const tradeSideDropdownItems = [
 		{ text: "All", value: "", onClick: setSelectedTradeSideDropdown },
-		{ text: "Long", value: "long", onClick: setSelectedTradeSideDropdown},
-		{ text: "Short", value: "short", onClick: setSelectedTradeSideDropdown},
+		{ text: "Long", value: "long", onClick: setSelectedTradeSideDropdown },
+		{ text: "Short", value: "short", onClick: setSelectedTradeSideDropdown },
 	];
-
-	function handleTradeSideDropdownClick(selectedItem: number) {
-		
-	}
 
 	let tradesItemsHeader = (
 		<div className="trades-item-group">
@@ -92,20 +91,26 @@ export default function Trades() {
 	return (
 		<div className="trades-container">
 			<div className="trades-search-container">
-				<div>
-					start_date
-					<DatePicker selected={startDate} onChange={(date: any) => setStartDate(date)} />
+				<div className="trades-search-group">
+					Start Date
+					<div className="date-picker-container">
+						<DatePicker selected={startDate} onChange={(date: any) => setStartDate(date)} />
+					</div>
 				</div>
-				<div>
-					end_date
-					<DatePicker selected={endDate} onChange={(date: any) => setEndDate(date)} />
+				<div className="trades-search-group">
+					End Date
+					<div className="date-picker-container">
+						<DatePicker selected={endDate} onChange={(date: any) => setEndDate(date)} />
+					</div>
 				</div>
-				<div>
+			</div>
+			<div className="trades-filters">
+				<div className="trades-filters-item">
 					Accounts
 				</div>
-				<div>
-					<Checkbox label="short" value={shortChecked} onChange={() => setShortChecked(!shortChecked)} />
-					<Checkbox label="long" value={longChecked} onChange={() => setLongChecked(!longChecked)} />
+				<div className="trades-filters-item">
+					Side: 
+					<Dropdown items={tradeSideDropdownItems} selectedItem={selectedTradeSideDropdown} setSelectedItem={setSelectedTradeSideDropdown} />
 				</div>
 			</div>
 			<div className="trades-container">
@@ -116,7 +121,7 @@ export default function Trades() {
 	);
 }
 
-export function loader({ request }: any) {
+export async function loader({ request }: any) {
 	const url = new URL(request.url);
 	const tradeParams: { [key: string]: string } = {
 		start_time: url.searchParams.get("start_time") || "",
@@ -125,8 +130,10 @@ export function loader({ request }: any) {
 		account_names: url.searchParams.get("account_names") || "",
 		include: url.searchParams.get("include") || "",
 	}
-	const queryString = url.searchParams.toString();
-	console.log(`[${fileName}:loader]: searchParams(): `, tradeParams);
-	console.log(`[${fileName}:loader]: queryString: `, queryString);
-	return getTrades(tradeParams);
+	const [trades, accounts] = await Promise.all([
+		getTrades(tradeParams).then(res => res.json()),
+		getAccounts("").then(res => res.json())
+	]);
+	return json({ trades, accounts });
 }
+

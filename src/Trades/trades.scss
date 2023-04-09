@@ -4,6 +4,19 @@
 	display: flex;
 }
 
+.trades-search-group {
+	display: flex;
+	align-items: center;
+	
+	&:not(:first-child) {
+		margin-left: 10px;
+	}
+
+	.date-picker-container {
+		margin-left: 10px;
+	}
+}
+
 .trades-item-container {
 	display: flex;
 	margin-top: 25px;

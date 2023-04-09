@@ -25,7 +25,7 @@ export default function Login(props: any) {
 			})
 			.catch((err) => {
 				console.log(fileName + "error]: err: ", err);
-				setErrorMessage(err.toString());
+				setErrorMessage(err.message);
 			});
 	}
 	return (

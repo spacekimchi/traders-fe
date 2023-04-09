@@ -16,11 +16,11 @@ import TradesDate from './TradesDate/TradesDate';
 import RootLayout from './RootLayout/RootLayout';
 import { loader as tradesLoader } from './Trades/Trades';
 import './stylesheets/app.scss';
-import { getCurrentUser } from './utils/api';
+import { getCurrentUser, getAccounts } from './utils/api';
 import { Routes, Route, Link, Navigate, RouterProvider, createBrowserRouter, createRoutesFromElements, useRouteError, useLoaderData, defer } from "react-router-dom";
 import AuthContext from './utils/AuthContext';
 import { AuthContextProvider } from './utils/AuthContext';
-import {AuthLayout} from './AuthLayout/AuthLayout';
+import { AuthLayout } from './AuthLayout/AuthLayout';
 
 /*
  *	/trades => Month View
@@ -28,7 +28,7 @@ import {AuthLayout} from './AuthLayout/AuthLayout';
  */
 
 const router = createBrowserRouter(createRoutesFromElements(
-	<Route element={<AuthLayout />} loader={() => defer({userPromise: currentUserLoader() })}>
+	<Route element={<AuthLayout />} loader={() => defer({ userPromise: currentUserLoader() })}>
 		<Route path="/" element={<RootLayout />} errorElement={<ErrorBoundary />} >
 			<Route index element={<Home />} />
 			<Route path="/login" element={<Login />} />
@@ -49,15 +49,19 @@ const router = createBrowserRouter(createRoutesFromElements(
 	</Route>
 ));
 
+function getUserAccounts() {
+	return getAccounts("");
+}
+
 function currentUserLoader() {
 	return getCurrentUser();
 }
 
 function ErrorBoundary() {
-  let error = useRouteError();
-  console.error(error);
-  // Uncaught ReferenceError: path is not defined
-  return <div>Dang!</div>;
+	let error = useRouteError();
+	console.error(error);
+	// Uncaught ReferenceError: path is not defined
+	return <div>Dang!</div>;
 }
 
 function App() {

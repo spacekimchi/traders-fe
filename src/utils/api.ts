@@ -8,34 +8,32 @@ const ROUTES: { [key: string]: string } = {
 	logout: '/api/logout',
 	login: '/api/login',
 	signup: '/api/users',
+	accounts: '/api/accounts',
 };
 
 function queryParamBuilder(params: { [key: string]: string }) {
 	let qp: string[] = [];
 	for (const k in params) {
-		qp.push(`${k}=${params[k]}`);
+		if (params[k]) {
+			qp.push(`${k}=${params[k]}`);
+		}
 	}
 	return qp.length ? '?' + qp.join('&') : "";
 }
 
 export async function getTrades(qp: { [key: string]: string }) {
-	console.log('[api.ts:getTrades] getting trades');
-	console.log('[api.ts:getTrades] queryString: ', qp);
-
-	let response = await fetch(`${ROUTES.trades}/${queryParamBuilder(qp)}`);
+	let response = await fetch(`${ROUTES.trades}${queryParamBuilder(qp)}`);
 	if (!response.ok) {
 		console.log('response: ', response);
-		throw { message: 'Failed to fetch trades', status: 500 };
+		throw { message: `Failed to fetch trades: ${response.statusText}`, status: response.status };
 	}
 	return response;
 }
 
 export async function getCurrentUser() {
-	console.log('[api.tsx]: getting current user');
 	let response = await fetch('/api/current_user');
 	if (!response.ok) {
-		console.log('Error occured while trying to get current user');
-		throw { message: 'Failed to fetch current user', status: 500 };
+		throw { message: `Failed to fetch current user: ${response.statusText}`, status: response.status };
 	}
 	return response.json();
 }
@@ -45,10 +43,8 @@ export async function logout() {
 		method: "POST"
 	});
 	if (!response.ok) {
-		console.log('Error occured while trying to logout');
-		throw { message: 'Failed to logout', status: 500 };
+		throw { message: `Failed to logout: ${response.statusText}`, status: response.status };
 	}
-	console.log(`[${fileName}:logout()]: response: `, response);
 	return response;
 }
 
@@ -64,10 +60,8 @@ export async function login(username: string, password: string) {
 		},
 	});
 	if (!response.ok) {
-		console.log(fileName, 'Error occured while trying to login');
-		throw { message: 'Failed to login', status: 500 };
+		throw { message: `Failed to login: ${response.statusText}`, status: response.status };
 	}
-	console.log(`[${fileName}:login()]: response: `, response);
 	return response;
 }
 
@@ -84,9 +78,16 @@ export async function signup(email: string, username: string, password: string) 
 		},
 	});
 	if (!response.ok) {
-		console.log('Error occured while trying to signup');
-		throw { message: 'Failed to signup', status: 500 };
+		throw { message: `Failed to signup: ${response.statusText}`, status: response.status };
 	}
-	console.log(`[${fileName}:signup()]: response: `, response);
 	return response;
 }
+
+export async function getAccounts(userId: string) {
+	const response = await fetch(ROUTES.accounts + (userId ? `?user_id=${userId}` : ""));
+	if (!response.ok) {
+		throw { message: `Failed to fetch accounts: ${response.statusText}`, status: response.status };
+	}
+	return response;
+}
+
