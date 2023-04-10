@@ -1,9 +1,4 @@
-import React, { useEffect, useState } from 'react';
-import TopBar from './TopBar/TopBar';
-import Day from './Day/Day';
-import Week from './Week/Week';
 import Month, { loader as tradesMonthLoader } from './Month/Month';
-import Year from './Year/Year';
 import Login from './Login/Login';
 import Signup from './Signup/Signup';
 import Home from './Home/Home';
@@ -16,10 +11,8 @@ import TradesDate from './TradesDate/TradesDate';
 import RootLayout from './RootLayout/RootLayout';
 import { loader as tradesLoader } from './Trades/Trades';
 import './stylesheets/app.scss';
-import { getCurrentUser, getAccounts } from './utils/api';
-import { Routes, Route, Link, Navigate, RouterProvider, createBrowserRouter, createRoutesFromElements, useRouteError, useLoaderData, defer } from "react-router-dom";
-import AuthContext from './utils/AuthContext';
-import { AuthContextProvider } from './utils/AuthContext';
+import { getCurrentUser } from './utils/api';
+import { Route, RouterProvider, createBrowserRouter, createRoutesFromElements, useRouteError, defer } from "react-router-dom";
 import { AuthLayout } from './AuthLayout/AuthLayout';
 
 /*
@@ -33,7 +26,7 @@ const router = createBrowserRouter(createRoutesFromElements(
 			<Route index element={<Home />} />
 			<Route path="/login" element={<Login />} />
 			<Route path="/signup" element={<Signup />} />
-			<Route path="/journal" element={<Journal />} />
+			<Route path="/journal" element={<Journal />} loader={tradesLoader} errorElement={<ErrorBoundary />} />
 			<Route path="/calendar" element={<CalendarView />} >
 				<Route index element={<Month />} loader={tradesMonthLoader} />
 				<Route path="month/:start_time/:stop_time" element={<Month />} />
@@ -43,15 +36,10 @@ const router = createBrowserRouter(createRoutesFromElements(
 				</Route>
 			</Route>
 			<Route path="/statistics" element={<Statistics />} />
-			<Route path="/trades" element={<Trades />} loader={tradesLoader} errorElement={<ErrorBoundary />} >
-			</Route>
+			<Route path="/trades" element={<Trades />} loader={tradesLoader} errorElement={<ErrorBoundary />} />
 		</Route>
 	</Route>
 ));
-
-function getUserAccounts() {
-	return getAccounts("");
-}
 
 function currentUserLoader() {
 	return getCurrentUser();

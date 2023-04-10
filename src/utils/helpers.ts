@@ -1,3 +1,5 @@
+import { Trade } from './types';
+
 export function dateToExcel(date: Date) {
 	return 25569.0 + ((date.getTime() - (date.getTimezoneOffset() * 60 * 1000)) / (1000 * 60 * 60 * 24));
 }
@@ -7,16 +9,29 @@ export function excelToDate(excel: number) {
 }
 
 export function excelToTime(excel: number) {
-	let time = excel % 1;
-	let hour = Math.floor(time * 24);
-	let rem = time * 24 % 1;
-	let minutes = Math.floor(rem * 60);
-	let minRem = rem * 60 % 1;
-	let seconds = Math.round(minRem * 60);
+	const time = excel % 1;
+	const hour = Math.floor(time * 24);
+	const rem = time * 24 % 1;
+	const minutes = Math.floor(rem * 60);
+	const minRem = rem * 60 % 1;
+	const seconds = Math.round(minRem * 60);
 	return `${hour}:${timeFormat(minutes)}:${timeFormat(seconds)}`;
 }
 
 function timeFormat(val: number) {
 	return val < 10 ? `0${val}` : val.toString();
+}
+
+export function groupTradesByDay(trades: Array<Trade>, simAccount: any) {
+	let tradesByDay: { [key: string]: Array<Trade> } = {};
+	trades.forEach((trade) => {
+		if (trade.account_id === simAccount.id) { return; }
+		const key = Math.floor(trade.entry_time);
+		if (!(key in tradesByDay)) {
+			tradesByDay[key] = [];
+		}
+		tradesByDay[key].push(trade);
+	});
+	return tradesByDay;
 }
 

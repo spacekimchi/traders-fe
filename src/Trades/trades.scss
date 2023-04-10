@@ -17,6 +17,24 @@
 	}
 }
 
+.filter-button {
+	border-radius: 5px;
+	padding: 2.5px 10px;
+
+	&.selected {
+		color: $christmas-green;
+		border: solid 2px $christmas-green;
+	}
+
+	&.not-selected {
+		border: solid 1px black;
+	}
+
+	&:not(:first-child) {
+		margin-left: 10px;
+	}
+}
+
 .trades-item-container {
 	display: flex;
 	margin-top: 25px;
@@ -26,8 +44,12 @@
 	display: flex;
 	margin-right: 50px;
 	width: 100%;
-
 	text-align: center;
+	.noflow {
+		text-overflow: ellipsis;
+		overflow: hidden;
+		white-space: nowrap;
+	}
 
 	.trades-item__small {
 		max-width: 75px;
@@ -51,7 +73,7 @@
 	}
 
 	.green {
-		color: #143306;
+		color: $lime-green;
 	}
 
 	.red {

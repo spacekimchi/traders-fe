@@ -1,14 +1,13 @@
 import './trades.scss';
-import { Outlet, useSearchParams, json, useLoaderData } from 'react-router-dom';
+import { json, useLoaderData } from 'react-router-dom';
 import { getTrades, getAccounts } from '../utils/api';
 import { tradeParams } from '../utils/types';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import DatePicker from 'react-datepicker';
-import Checkbox from '../Checkbox/Checkbox';
 import Dropdown from '../Dropdown/Dropdown';
 import { nanoid } from 'nanoid';
 import "react-datepicker/dist/react-datepicker.css";
-import { excelToDate, dateToExcel, excelToTime } from '../utils/helpers';
+import { excelToDate, excelToTime } from '../utils/helpers';
 const fileName = "Trades.tsx";
 
 export default function Trades() {
@@ -16,17 +15,46 @@ export default function Trades() {
 	const [trades, setTrades] = useState(loaderData.trades);
 	const [filteredTrades, setFilteredTrades] = useState(trades);
 	const [accounts, setAccounts] = useState(loaderData.accounts);
+	console.log(accounts);
 	const [startDate, setStartDate] = useState(new Date());
 	const [endDate, setEndDate] = useState(new Date());
-	const [shortChecked, setShortChecked] = useState(false);
-	const [longChecked, setLongChecked] = useState(false);
-	const [searchParams, setSearchParams] = useSearchParams();
 	const [selectedTradeSideDropdown, setSelectedTradeSideDropdown] = useState(0);
+	const [selectedAccounts, setSelectedAccounts] = useState(new Set(accounts.map((account: any) => account.id)));
+
+	const accountsDisplay = accounts.map((account: any, idx: number) => {
+		let className = "filter-button" + (selectedAccounts.has(account.id) ? " selected" : " not-selected");
+		return (<button key={idx} type="button" className={className} onClick={() => {updateSelectedAccounts(account.id)}}>{account.name}</button>);
+	});
+
 	const tradeSideDropdownItems = [
 		{ text: "All", value: "", onClick: setSelectedTradeSideDropdown },
-		{ text: "Long", value: "long", onClick: setSelectedTradeSideDropdown },
-		{ text: "Short", value: "short", onClick: setSelectedTradeSideDropdown },
+		{ text: "Long", value: false, onClick: setSelectedTradeSideDropdown },
+		{ text: "Short", value: true, onClick: setSelectedTradeSideDropdown },
 	];
+
+	function updateSelectedAccounts(id: number) {
+		if (selectedAccounts.has(id)) {
+			selectedAccounts.delete(id);
+		} else {
+			selectedAccounts.add(id);
+		}
+		setSelectedAccounts(new Set(selectedAccounts));
+	}
+
+	function applyFilter() {
+		let tradesBuilder = trades.filter((trade: any) => {
+			let fVal = selectedAccounts.has(trade.account_id);
+			if (selectedTradeSideDropdown > 0) {
+				return fVal && trade.short === tradeSideDropdownItems[selectedTradeSideDropdown].value;
+			}
+			return fVal;
+		});
+		setFilteredTrades([...tradesBuilder]);
+	}
+
+	useEffect(() => {
+		applyFilter()
+	}, [selectedAccounts, selectedTradeSideDropdown])
 
 	let tradesItemsHeader = (
 		<div className="trades-item-group">
@@ -45,6 +73,9 @@ export default function Trades() {
 			<div className="trades-item__small">
 				Side
 			</div>
+			<div className="trades-item__medium">
+				Account
+			</div>
 			<div className="trades-item">
 				Tags
 			</div>
@@ -54,7 +85,7 @@ export default function Trades() {
 		</div>
 	);
 
-	let tradesItems = trades.map((trade: any) => {
+	let tradesItems = filteredTrades.map((trade: any) => {
 		const entryDate = excelToDate(trade.entry_time).toDateString();
 		const exitDate = excelToDate(trade.exit_time).toDateString();
 		const tradeSide = trade.short ? "SHORT" : "LONG";
@@ -77,6 +108,9 @@ export default function Trades() {
 				</div>
 				<div className="trades-item__small">
 					{tradeSide}
+				</div>
+				<div className="trades-item__medium noflow" title={accounts[trade.account_id - 1].name}>
+					{accounts[trade.account_id - 1].name}
 				</div>
 				<div className="trades-item">
 					Tags go here
@@ -107,9 +141,12 @@ export default function Trades() {
 			<div className="trades-filters">
 				<div className="trades-filters-item">
 					Accounts
+					<div>
+						{accountsDisplay}
+					</div>
 				</div>
 				<div className="trades-filters-item">
-					Side: 
+					Side:
 					<Dropdown items={tradeSideDropdownItems} selectedItem={selectedTradeSideDropdown} setSelectedItem={setSelectedTradeSideDropdown} />
 				</div>
 			</div>

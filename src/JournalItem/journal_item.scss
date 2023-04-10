@@ -1,0 +1,9 @@
+.journal-item {
+	border: solid 1px black;
+	padding: 5px;
+	border-radius: 5px;
+
+	&:not(:first-child) {
+		margin-top: 10px;
+	}
+}

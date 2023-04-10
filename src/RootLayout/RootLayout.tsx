@@ -6,10 +6,7 @@ import { AuthContext } from '../utils/AuthContext';
 const fileName = "RootLayout.tsx";
 
 export default function RootLayout(props: any) {
-	//const user_id = useLoaderData();
-	//console.log('user_id: ', user_id);
 	const authContext = useContext(AuthContext);
-	//authContext.setCurrentUser(user_id);
 	console.log(`[${fileName}] authContext.currentUser: `, authContext.currentUser);
 	const [hideUserNav, setHideUserNav] = useState(authContext.currentUser === "0");
 	useEffect(() => {
