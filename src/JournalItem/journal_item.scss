@@ -1,9 +1,44 @@
-.journal-item {
-	border: solid 1px black;
+@import "../stylesheets/variables.scss";
+
+.journal-item-container {
+	border-bottom: solid 1px black;
 	padding: 5px;
-	border-radius: 5px;
 
 	&:not(:first-child) {
 		margin-top: 10px;
 	}
+
+	.journal-item-header {
+		font-size: $journal-header;
+		margin-bottom: 15px;
+	}
+
+	.journal-item-main {
+		display: flex;
+		justify-content: space-around;
+	}
+
+	.journal-item-main__item {
+		max-width: 300px;
+		width: 100%;
+
+		&:not(:last-child) {
+			border-right: dashed black 2px;
+		}
+	}
+
+	.journal-item-more-container {
+	}
+
+	.gross-pnl {
+		font-size: 24px;
+		font-weight: 500;
+	}
 }
+
+.img-loading {
+	background: transparent url('../assets/totoro-loader.gif') center no-repeat;
+	background-size: 300px;
+	min-height: 300px;
+}
+

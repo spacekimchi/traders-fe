@@ -9,6 +9,7 @@ const ROUTES: { [key: string]: string } = {
 	login: '/api/login',
 	signup: '/api/users',
 	accounts: '/api/accounts',
+	journalEntries: '/api/journal_entries',
 };
 
 function queryParamBuilder(params: { [key: string]: string }) {
@@ -91,3 +92,25 @@ export async function getAccounts(userId: string) {
 	return response;
 }
 
+export async function get(route: string, qp: { [key: string]: string }) {
+	const response = await fetch(`${ROUTES[route]}${queryParamBuilder(qp)}`);
+	if (!response.ok) {
+		throw { message: `Failed to fetch ${route}: ${response.statusText}`, status: response.status };
+	}
+	return response;
+}
+
+export async function post(route: string, body: any) {
+	const response = await fetch(ROUTES[route], {
+		method: "POST",
+		body: JSON.stringify(body),
+		headers: {
+			'Content-type': 'application/json; charset=UTF-8'
+		},
+	});
+	if (!response.ok) {
+		console.log('error response ', response);
+		throw { message: `Failed to create journal entry: ${response.statusText}`, status: response.status };
+	}
+	return response;
+}

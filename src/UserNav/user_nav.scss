@@ -1,8 +1,20 @@
 @import "../stylesheets/variables.scss";
 
-.left-bar {
-	border: solid 1px black;
+.nav-bar {
 	height: auto;
 	position: fixed;
+	padding: $leftbar-padding;
 	height: 100%;
+	
+	.nav-bar-item:not(:first-child) {
+		margin-top: 4px;
+	}
+}
+.nav-link {
+	display: flex;
+	align-items: center;
+
+	svg {
+		margin-right: 6px;
+	}
 }

@@ -1,0 +1,39 @@
+@import '../stylesheets/_variables.scss';
+
+.journal-entry-form {
+	display: flex;
+	flex-direction: column;
+	width: 100%;
+
+	.journal-entry-form-textarea {
+		width: 100%;
+	}
+
+	.form-image-url-input {
+		width: 100%;
+		&.error {
+			border: solid 2px $maximum-red;
+		}
+	}
+
+	.form-image-url-button {
+		margin-bottom: 15px;
+
+		&:hover {
+			cursor: pointer;
+		}
+	}
+
+	.form-url-group {
+		display: flex;
+		align-items: last baseline;
+		margin-bottom: 5px;
+	}
+	
+	.button-icon {
+		margin-left: 5px;
+		&:hover {
+			cursor: pointer;
+		}
+	}
+}

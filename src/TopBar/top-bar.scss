@@ -4,10 +4,9 @@
 	position: fixed;
 	display: flex;
 	justify-content: end;
-	top: 0;
-	left: 0;
 	background-color: white;
 	border: solid 1px black;
+	max-width: 1280px;
 	width: 100%;
 	background-image: url("../assets/img-noise-361x370.png");
 	z-index: 99;

@@ -23,4 +23,14 @@ export interface Account {
 	user_id: string,
 	visible: boolean,
 	sim: boolean,
+	pnl: number,
 }
+
+export interface JournalEntry {
+	id?: number,
+	user_id?: string,
+	entry_date?: number,
+	image_urls: Array<string>,
+	notes: string,
+}
+

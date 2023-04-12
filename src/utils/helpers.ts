@@ -1,4 +1,4 @@
-import { Trade } from './types';
+import { Trade, JournalEntry } from './types';
 
 export function dateToExcel(date: Date) {
 	return 25569.0 + ((date.getTime() - (date.getTimezoneOffset() * 60 * 1000)) / (1000 * 60 * 60 * 24));
@@ -23,14 +23,14 @@ function timeFormat(val: number) {
 }
 
 export function groupTradesByDay(trades: Array<Trade>, simAccount: any) {
-	let tradesByDay: { [key: string]: Array<Trade> } = {};
+	let tradesByDay: { [key: string]: { trades: Array<Trade>, journalEntry: JournalEntry } } = {};
 	trades.forEach((trade) => {
 		if (trade.account_id === simAccount.id) { return; }
 		const key = Math.floor(trade.entry_time);
 		if (!(key in tradesByDay)) {
-			tradesByDay[key] = [];
+			tradesByDay[key] = { trades: [], journalEntry: { image_urls: [], notes: "" } as JournalEntry };
 		}
-		tradesByDay[key].push(trade);
+		tradesByDay[key].trades.push(trade);
 	});
 	return tradesByDay;
 }

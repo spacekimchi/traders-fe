@@ -8,26 +8,34 @@ import { ReactComponent as TradeIcon } from '../icons/trade.svg';
 
 export default function UserNav() {
 	return (
-		<div className="left-bar">
-			<div>
-				<HomeIcon height={25} width={25} />
-				<Link to="/">Home</Link>
+		<div className="nav-bar">
+			<div className="nav-bar-item">
+				<Link to="/" className="nav-link">
+					<HomeIcon height={25} width={25} /> Home
+				</Link>
 			</div>
-			<div>
-				<JournalIcon height={25} width={25} />
-				<Link to="/journal">Journal</Link>
+			<div className="nav-bar-item">
+				
+				<Link to="/journal" className="nav-link">
+					<JournalIcon height={25} width={25} /> Journal
+				</Link>
 			</div>
-			<div>
-				<CalendarIcon height={25} width={25} />
-				<Link to="/calendar">Calendar</Link>
+			<div className="nav-bar-item">
+				
+				<Link to="/calendar" className="nav-link">
+					<CalendarIcon height={25} width={25} /> Calendar
+				</Link>
 			</div>
-			<div>
-				<ChartPipeIcon height={25} width={25} />
-				<Link to="/statistics">Statistics</Link>
+			<div className="nav-bar-item">
+				
+				<Link to="/statistics" className="nav-link">
+					<ChartPipeIcon height={25} width={25} /> Statistics
+				</Link>
 			</div>
-			<div>
-				<TradeIcon height={25} width={25} />
-				<Link to="/trades">Trades</Link>
+			<div className="nav-bar-item">
+				<Link to="/trades" className="nav-link">
+					<TradeIcon height={25} width={25} /> Trades
+				</Link>
 			</div>
 		</div>
 	);

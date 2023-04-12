@@ -10,15 +10,10 @@ import TradesView from './TradesView/TradesView';
 import TradesDate from './TradesDate/TradesDate';
 import RootLayout from './RootLayout/RootLayout';
 import { loader as tradesLoader } from './Trades/Trades';
-import './stylesheets/app.scss';
 import { getCurrentUser } from './utils/api';
 import { Route, RouterProvider, createBrowserRouter, createRoutesFromElements, useRouteError, defer } from "react-router-dom";
 import { AuthLayout } from './AuthLayout/AuthLayout';
-
-/*
- *	/trades => Month View
- *	/trades/{year, month, week, day}/{2023}/{03}/{31} => Any missing field will default back to Month View
- */
+import { loader as journalLoader } from './Journal/Journal';
 
 const router = createBrowserRouter(createRoutesFromElements(
 	<Route element={<AuthLayout />} loader={() => defer({ userPromise: currentUserLoader() })}>
@@ -26,7 +21,7 @@ const router = createBrowserRouter(createRoutesFromElements(
 			<Route index element={<Home />} />
 			<Route path="/login" element={<Login />} />
 			<Route path="/signup" element={<Signup />} />
-			<Route path="/journal" element={<Journal />} loader={tradesLoader} errorElement={<ErrorBoundary />} />
+			<Route path="/journal" element={<Journal />} loader={journalLoader} errorElement={<ErrorBoundary />} />
 			<Route path="/calendar" element={<CalendarView />} >
 				<Route index element={<Month />} loader={tradesMonthLoader} />
 				<Route path="month/:start_time/:stop_time" element={<Month />} />
