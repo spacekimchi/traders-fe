@@ -9,6 +9,7 @@ import Trades from './Trades/Trades';
 import TradesView from './TradesView/TradesView';
 import TradesDate from './TradesDate/TradesDate';
 import RootLayout from './RootLayout/RootLayout';
+import ImportPage from './ImportPage/ImportPage';
 import { loader as tradesLoader } from './Trades/Trades';
 import { getCurrentUser } from './utils/api';
 import { Route, RouterProvider, createBrowserRouter, createRoutesFromElements, useRouteError, defer } from "react-router-dom";
@@ -21,6 +22,7 @@ const router = createBrowserRouter(createRoutesFromElements(
 			<Route index element={<Home />} />
 			<Route path="/login" element={<Login />} />
 			<Route path="/signup" element={<Signup />} />
+			<Route path="/import" element={<ImportPage />} />
 			<Route path="/journal" element={<Journal />} loader={journalLoader} errorElement={<ErrorBoundary />} />
 			<Route path="/calendar" element={<CalendarView />} >
 				<Route index element={<Month />} loader={tradesMonthLoader} />

@@ -10,6 +10,7 @@ const ROUTES: { [key: string]: string } = {
 	signup: '/api/users',
 	accounts: '/api/accounts',
 	journalEntries: '/api/journal_entries',
+	importTrade: '/api/trades/import'
 };
 
 function queryParamBuilder(params: { [key: string]: string }) {
@@ -114,3 +115,4 @@ export async function post(route: string, body: any) {
 	}
 	return response;
 }
+

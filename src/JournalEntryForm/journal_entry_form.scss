@@ -24,10 +24,15 @@
 		}
 	}
 
-	.form-url-group {
+	.form-image-url-input-container {
 		display: flex;
-		align-items: last baseline;
+	}
+
+	.form-url-group {
 		margin-bottom: 5px;
+	}
+	.error-message {
+		color: $maximum-red;
 	}
 	
 	.button-icon {

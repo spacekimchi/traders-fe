@@ -90,7 +90,7 @@ export default function JournalItem(props: JournalItemProps) {
 				<DollarVal val={(shortsPnl + longsPnl).toFixed(2)} />
 			</div>
 			<div>
-				- ({shortsCount + longsCount} trades, win %: {((winningTrades.length/(shortsCount + longsCount)) * 100).toFixed(2)})
+				- ({shortsCount + longsCount} trades, win %: {((winningTrades.length / (shortsCount + longsCount)) * 100).toFixed(2)})
 			</div>
 			<div>
 				Longs PnL: <DollarVal val={longsPnl.toFixed(2)} />
@@ -122,7 +122,7 @@ export default function JournalItem(props: JournalItemProps) {
 				Biggest winner: <DollarVal val={biggestWinner.toFixed(2)} />
 			</div>
 			<div>
-				Average winner: {winningTrades.length ? <DollarVal val={(winningTotals/winningTrades.length).toFixed(2)} /> : "-"}
+				Average winner: {winningTrades.length ? <DollarVal val={(winningTotals / winningTrades.length).toFixed(2)} /> : "-"}
 			</div>
 			<div>
 				Longest hold: {winningTrades.length ? excelToTime(longestWinningTime) : "-"}
@@ -131,7 +131,7 @@ export default function JournalItem(props: JournalItemProps) {
 				Shortest hold: {winningTrades.length ? excelToTime(shortestWinningTime) : "-"}
 			</div>
 			<div>
-				Average hold: {winningTrades.length ? excelToTime(winningTime/winningTrades.length) : "-"}
+				Average hold: {winningTrades.length ? excelToTime(winningTime / winningTrades.length) : "-"}
 			</div>
 		</div>
 	);
@@ -148,7 +148,7 @@ export default function JournalItem(props: JournalItemProps) {
 				Biggest loser: <DollarVal val={biggestLoser.toFixed(2)} />
 			</div>
 			<div>
-				Average loser: {losingTrades.length ? <DollarVal val={(losingTotals/losingTrades.length).toFixed(2)} /> : "-"}
+				Average loser: {losingTrades.length ? <DollarVal val={(losingTotals / losingTrades.length).toFixed(2)} /> : "-"}
 			</div>
 			<div>
 				Longest hold: {losingTrades.length ? excelToTime(longestLosingTime) : "-"}
@@ -157,7 +157,7 @@ export default function JournalItem(props: JournalItemProps) {
 				Shortest hold: {losingTrades.length ? excelToTime(shortestLosingTime) : "-"}
 			</div>
 			<div>
-				Average hold: {losingTrades.length ? excelToTime(losingTime/losingTrades.length) : "-"}
+				Average hold: {losingTrades.length ? excelToTime(losingTime / losingTrades.length) : "-"}
 			</div>
 		</div>
 	);
@@ -166,7 +166,7 @@ export default function JournalItem(props: JournalItemProps) {
 		/* https://drive.google.com/file/d/19ZEl8nhZt7E4-LByo_XO-L_UEORqJpBv/view?usp=share_link */
 		/* https://drive.google.com/uc?id=1NPxxaxh8eD1SAT6MXCaAZnlqJEdH-vsR */
 		let errors = new Set();
-		let imageIds = [];
+		let imageIds: Array<string> = [];
 		formImageUrls.forEach((imageUrl: string, idx: number) => {
 			if (!imageUrl.startsWith("https://drive.google.com/file/d/")) {
 				console.log("adding errors");
@@ -178,11 +178,10 @@ export default function JournalItem(props: JournalItemProps) {
 			}
 		});
 		if (errors.size > 0) {
-			console.log('sertting error state');
 			setFormErrors(errors);
+			return;
 		}
-		if (true) { return; }
-		let response = await post('journalEntries', { notes: formNotes, entry_date: props.day, image_urls: formImageUrls });
+		let response = await post('journalEntries', { notes: formNotes, entry_date: props.day, image_urls: imageIds });
 		journalEntry.notes = formNotes;
 		journalEntry.image_urls = formImageUrls;
 		setJournalEntry(Object.assign({}, journalEntry));
@@ -218,7 +217,7 @@ export default function JournalItem(props: JournalItemProps) {
 			<div className="journal-item-header">
 				{date}
 			</div>
-			<div onClick={() => {setShowMore(!showMore)}}>
+			<div onClick={() => { setShowMore(!showMore) }}>
 				<div className="journal-item-main">
 					<div className="journal-item-main__item">
 						{mainTradesSection}
@@ -235,8 +234,8 @@ export default function JournalItem(props: JournalItemProps) {
 				<div className="journal-item-main">
 					{
 						showMore ?
-						(<p>Click to hide</p>) :
-						<p>Click for more</p>
+							(<button type="button" className="journal-item-info-button">Click to hide</button>) :
+							<button type="button" className="">Click for more</button>
 					}
 				</div>
 			</div>
@@ -245,8 +244,8 @@ export default function JournalItem(props: JournalItemProps) {
 			</div>
 			{
 				showMore ?
-				showMoreSection :
-				<></>
+					showMoreSection :
+					<></>
 			}
 		</div>
 	);

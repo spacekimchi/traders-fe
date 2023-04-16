@@ -29,6 +29,10 @@ button::-moz-focus-inner {
     padding: 0;
 }
 
+p {
+	margin: 0;
+}
+
 body {
 	background-image: url("./assets/img-noise-361x370.png");
 	max-width: 1280px;

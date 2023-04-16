@@ -9,27 +9,28 @@ export default function JournalEntryForm(props: any) {
 	//const [imageUrl, setImageUrl] = useState(imageUrls ? imageUrls[0] : "");
 	const [newImageUrl, setNewImageUrl] = useState("");
 	const imageUrlForms = props.imageUrls.map((imageUrl: string, idx: number) => {
-		console.log('props.formErrors ', props.formErrors);
 		let error = props.formErrors.has(idx);
-		console.log('idx error ', idx, error);
 		return (
 			<div key={idx} className="form-url-group">
-				<input
-					className={`form-image-url-input${error ? " error" : ""}`}
-					type="text"
-					id={`image-url-input-${props.day}`}
-					name="text"
-					value={imageUrl}
-					onChange={(e) => {
-							handleImageUrlChange(e, idx);
+				<p className="error-message" hidden={!props.formErrors.has(idx)}>Must be a google drive image url (starts with: "https://drive.google.com/file/d/")</p>
+				<div className="form-image-url-input-container">
+					<input
+						className={`form-image-url-input${error ? " error" : ""}`}
+						type="text"
+						id={`image-url-input-${props.day}`}
+						name="text"
+						value={imageUrl}
+						onChange={(e) => {
+								handleImageUrlChange(e, idx);
+							}
 						}
-					}
-				/>
-				<button type="button" onClick={(e) => {removeFormUrl(e, idx)}} >
-					<span className="button-icon x-icon">
-						<RedMinusIcon height={15} width={15} />
-					</span>
-				</button>
+					/>
+					<button type="button" onClick={(e) => {removeFormUrl(e, idx)}} >
+						<span className="button-icon x-icon">
+							<RedMinusIcon height={15} width={15} />
+						</span>
+					</button>
+				</div>
 			</div>
 		);
 	});

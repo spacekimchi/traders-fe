@@ -23,6 +23,9 @@ function timeFormat(val: number) {
 }
 
 export function groupTradesByDay(trades: Array<Trade>, simAccount: any) {
+	if (!simAccount) {
+		simAccount = 0;
+	}
 	let tradesByDay: { [key: string]: { trades: Array<Trade>, journalEntry: JournalEntry } } = {};
 	trades.forEach((trade) => {
 		if (trade.account_id === simAccount.id) { return; }
