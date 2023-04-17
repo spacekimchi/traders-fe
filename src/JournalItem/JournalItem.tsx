@@ -169,11 +169,9 @@ export default function JournalItem(props: JournalItemProps) {
 		let imageIds: Array<string> = [];
 		formImageUrls.forEach((imageUrl: string, idx: number) => {
 			if (!imageUrl.startsWith("https://drive.google.com/file/d/")) {
-				console.log("adding errors");
 				errors.add(idx);
 			} else {
 				let imageId = imageUrl.replace('https://drive.google.com/file/d/', '').split('/')[0];
-				console.log('imageId ', imageId);
 				imageIds.push(imageId);
 			}
 		});
@@ -181,16 +179,18 @@ export default function JournalItem(props: JournalItemProps) {
 			setFormErrors(errors);
 			return;
 		}
-		let response = await post('journalEntries', { notes: formNotes, entry_date: props.day, image_urls: imageIds });
+		let response = await post('journalEntries', { notes: formNotes, entry_date: Number(props.day), image_urls: imageIds });
 		journalEntry.notes = formNotes;
 		journalEntry.image_urls = formImageUrls;
 		setJournalEntry(Object.assign({}, journalEntry));
 	}
 
-	let img_urls = journalEntry.image_urls.map((img_url: string, idx: number) => {
+	let img_urls = journalEntry.image_urls.map((imgId: string, idx: number) => {
+		let imgUrl = `https://drive.google.com/uc?export=view&id=${imgId}`;
+		let imgHref = `https://drive.google.com/file/d/${imgId}`;
 		return (
-			<a key={idx} href={img_url} target="_blank">
-				<img className="img-loading" src={img_url} style={{ width: "100%", height: "auto" }} />
+			<a key={idx} href={imgHref} target="_blank">
+				<img className="img-loading" src={imgUrl} style={{ width: "100%", height: "auto" }} />
 			</a>
 		);
 	});

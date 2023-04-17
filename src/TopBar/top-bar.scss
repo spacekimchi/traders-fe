@@ -3,16 +3,23 @@
 .top-bar {
 	position: fixed;
 	display: flex;
-	justify-content: end;
 	background-color: white;
 	border: solid 1px black;
 	max-width: 1280px;
 	width: 100%;
+	height: 50px;
 	background-image: url("../assets/img-noise-361x370.png");
 	z-index: 99;
 }
 
 .top-bar-items {
 	padding: 15px;
+	margin-left: auto;
+}
+
+.top-bar-items__item {
+	&:not(:first-child) {
+		margin-left: 8px;
+	}
 }
 

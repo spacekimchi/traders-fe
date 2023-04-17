@@ -1,7 +1,6 @@
 import './trades.scss';
 import { json, useLoaderData } from 'react-router-dom';
 import { getTrades, getAccounts } from '../utils/api';
-import { tradeParams } from '../utils/types';
 import { useState, useEffect } from 'react';
 import DatePicker from 'react-datepicker';
 import Dropdown from '../Dropdown/Dropdown';
@@ -9,6 +8,22 @@ import { nanoid } from 'nanoid';
 import "react-datepicker/dist/react-datepicker.css";
 import { excelToDate, excelToTime } from '../utils/helpers';
 const fileName = "Trades.tsx";
+
+export async function loader({ request }: any) {
+	const url = new URL(request.url);
+	const tradeParams: { [key: string]: string } = {
+		start_time: url.searchParams.get("start_time") || "",
+		end_time: url.searchParams.get("end_time") || "",
+		short: url.searchParams.get("short") || "",
+		account_names: url.searchParams.get("account_names") || "",
+		include: url.searchParams.get("include") || "",
+	}
+	const [trades, accounts] = await Promise.all([
+		getTrades(tradeParams).then(res => res.json()),
+		getAccounts("").then(res => res.json())
+	]);
+	return json({ trades, accounts });
+}
 
 export default function Trades() {
 	let loaderData = useLoaderData() as any;
@@ -23,7 +38,7 @@ export default function Trades() {
 
 	const accountsDisplay = accounts.map((account: any, idx: number) => {
 		let className = "filter-button" + (selectedAccounts.has(account.id) ? " selected" : " not-selected");
-		return (<button key={idx} type="button" className={className} onClick={() => {updateSelectedAccounts(account.id)}}>{account.name}</button>);
+		return (<button key={idx} type="button" className={className} onClick={() => { updateSelectedAccounts(account.id) }}>{account.name}</button>);
 	});
 
 	const tradeSideDropdownItems = [
@@ -147,7 +162,11 @@ export default function Trades() {
 				</div>
 				<div className="trades-filters-item">
 					Side:
-					<Dropdown items={tradeSideDropdownItems} selectedItem={selectedTradeSideDropdown} setSelectedItem={setSelectedTradeSideDropdown} />
+					<Dropdown
+						items={tradeSideDropdownItems}
+						selectedItem={selectedTradeSideDropdown}
+						setSelectedItem={setSelectedTradeSideDropdown}
+					/>
 				</div>
 			</div>
 			<div className="trades-container">
@@ -157,20 +176,3 @@ export default function Trades() {
 		</div>
 	);
 }
-
-export async function loader({ request }: any) {
-	const url = new URL(request.url);
-	const tradeParams: { [key: string]: string } = {
-		start_time: url.searchParams.get("start_time") || "",
-		end_time: url.searchParams.get("end_time") || "",
-		short: url.searchParams.get("short") || "",
-		account_names: url.searchParams.get("account_names") || "",
-		include: url.searchParams.get("include") || "",
-	}
-	const [trades, accounts] = await Promise.all([
-		getTrades(tradeParams).then(res => res.json()),
-		getAccounts("").then(res => res.json())
-	]);
-	return json({ trades, accounts });
-}
-

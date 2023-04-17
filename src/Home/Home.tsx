@@ -11,10 +11,8 @@ interface HomeProps {
 
 export default function Home(props: any) {
 	const authContext = useContext(AuthContext);
-	console.log(`[${fileName}:main] currentUser: `, authContext.currentUser);
 	return (
 		<div className="home-container">
-			Home
 		</div>
 	);
 }
