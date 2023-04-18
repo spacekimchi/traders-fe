@@ -7,7 +7,7 @@ import { ReactComponent as CalendarIcon } from '../icons/calendar.svg';
 import { ReactComponent as TradeIcon } from '../icons/trade.svg';
 import { ReactComponent as UploadArrowIcon } from '../icons/upload-arrow.svg';
 
-export default function UserNav() {
+export default function UserNav(props: any) {
 	return (
 		<div className="nav-bar">
 			<div className="nav-bar-item">
@@ -38,11 +38,17 @@ export default function UserNav() {
 					<TradeIcon height={25} width={25} /> Trades
 				</Link>
 			</div>
-			<div className="nav-bar-item">
-				<Link to="/import" className="nav-link">
-					<UploadArrowIcon height={25} width={25} /> Import
-				</Link>
-			</div>
+			{
+				props.userLoggedIn ?
+				(
+					<div className="nav-bar-item">
+						<Link to="/import" className="nav-link">
+							<UploadArrowIcon height={25} width={25} /> Import
+						</Link>
+					</div>
+				) : <></>
+
+			}
 		</div>
 	);
 }

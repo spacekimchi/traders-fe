@@ -15,7 +15,6 @@ export default function TopBar(props: TopBarProps) {
 	const [disableLogout, setDisableLogout] = useState(false);
 	let authLinks = (<>
 		<Link to="/login" className="top-bar-items__item">Login</Link>
-		<Link to="/signup" className="top-bar-items__item">Signup</Link>
 	</>);
 	let logoutButton = (<button type="submit" onClick={handleLogout} disabled={disableLogout}>Logout</button>);
 

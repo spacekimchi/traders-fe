@@ -16,7 +16,7 @@ export default function RootLayout(props: any) {
 		<div className="app-container">
 			<TopBar userLoggedIn={userLoggedIn} setCurrentUser={authContext.setCurrentUser} />
 			<div className="main-page">
-				<UserNav></UserNav>
+				<UserNav userLoggedIn={userLoggedIn}></UserNav>
 				<div className="main-content">
 					<Outlet />
 				</div>
