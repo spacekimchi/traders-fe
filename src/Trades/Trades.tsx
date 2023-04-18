@@ -30,7 +30,6 @@ export default function Trades() {
 	const [trades, setTrades] = useState(loaderData.trades);
 	const [filteredTrades, setFilteredTrades] = useState(trades);
 	const [accounts, setAccounts] = useState(loaderData.accounts);
-	console.log(accounts);
 	const [startDate, setStartDate] = useState(new Date());
 	const [endDate, setEndDate] = useState(new Date());
 	const [selectedTradeSideDropdown, setSelectedTradeSideDropdown] = useState(0);

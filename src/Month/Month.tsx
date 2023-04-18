@@ -2,9 +2,12 @@ import { useEffect, useState } from 'react';
 import {tradeParams} from '../utils/types';
 import { nanoid } from 'nanoid';
 import './month.scss';
-import { Link, useLoaderData } from "react-router-dom";
+import { Link, useLoaderData, json } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
-import { getTrades } from '../utils/api';
+import { getTrades, getAccounts } from '../utils/api';
+import { Account, Trade } from '../utils/types';
+import { dateToExcel, excelToDate, groupTradesByDay } from '../utils/helpers';
+import DollarVal from '../DollarVal/DollarVal';
 
 const fileName = "Month.tsx";
 
@@ -12,13 +15,29 @@ interface tradesProps {
 	trades: Array<Trade>;
 }
 
-interface Trade {
-	id: number, account_id: number, commission: number, entry_time: number, exit_time: number, instrument: string, pnl: number, short: boolean
+export async function loader({ request }: any) {
+	const url = new URL(request.url);
+	const tradeParams: { [key: string]: string } = {
+		start_time: url.searchParams.get("start_time") || "",
+		end_time: url.searchParams.get("end_time") || "",
+		short: url.searchParams.get("short") || "",
+		account_names: url.searchParams.get("account_names") || "",
+		include: url.searchParams.get("include") || "",
+	}
+	const [trades, accounts] = await Promise.all([
+		getTrades(tradeParams).then(res => res.json()),
+		getAccounts("").then(res => res.json())
+	]);
+	return json({ trades, accounts });
 }
 
 export default function Month(props: any) {
-	const trades: Trade[] = useLoaderData() as Trade[];
+	let loaderData = useLoaderData() as any;
+	const [accounts, setAccounts] = useState(loaderData.accounts);
+	const [trades, setTrades] = useState(loaderData.trades);
+	const simAccount = accounts.find((account: Account) => account.sim);
 	const navigate = useNavigate();
+	let tradesByDay = groupTradesByDay(trades, simAccount);
 	const MONTHS: { [key: string]: number } = {
 		0: 31,
 		1: 28,
@@ -42,121 +61,68 @@ export default function Month(props: any) {
 		5: "Friday",
 		6: "Saturday",
 	};
-	const weeks = createCalendar(new Date().getMonth(), new Date().getFullYear());
 
-	function createCalendar(month: number, year: number) {
-		if (!trades.length) { return };
-		const firstDay = new Date(year, month, 1);
-		const firstDayDate = firstDay.getDate();
-		const firstDayExcel = dateToExcel(firstDay);
-		const lastDay = new Date(year, month + 1, 0);
-		const fdDay = firstDay.getDay();
-		const weeks = [];
-		let tradesByDay: { [key: string]: Trade[] } = {};
-		trades.forEach((trade: Trade) => {
-			const day = Math.floor(trade.entry_time);
-			if (!(day in tradesByDay)) {
-				tradesByDay[day] = [trade];
-			} else {
-				tradesByDay[day].push(trade);
-			}
+	function getPnl(trades: Array<Trade>) {
+		let pnl = 0.0;
+		trades.forEach((trade) => {
+			pnl += trade.pnl - trade.commission;
 		});
-
-		weeks.push(createWeek(fdDay, firstDayDate, month, firstDayExcel, tradesByDay));
-		let excelDate = firstDayExcel + (7 - fdDay);
-		for (let i = (7 - fdDay) + 1; i < lastDay.getDate(); i += 7) {
-			weeks.push(createWeek(0, i, month, excelDate, tradesByDay));
-			excelDate += 7;
-		}
-		return weeks.map((week) => <div key={nanoid()} className="week-container">{week}</div>);
+		return pnl.toFixed(2);
 	}
 
-	function createWeek(day: number, date: number, month: number, excelDate: number, tradesByDay: { [key: string]: any[] }) {
-		/* TODO if input numbers dont make sense return some error week */
-		/* Also needs leap year calculations */
-		let week = [];
-		let curDay = 0;
-		if (day) {
-			const prevMonthDays = MONTHS[(month + 11) % 12];
-			excelDate -= day;
-			for (let curDate = prevMonthDays - day; curDate <= prevMonthDays; curDate += 1) {
-				week.push(
-					<div key={nanoid()} className="weekday">
-						<Link to="/day"> {curDate} {dayDict[curDay]}</Link>
-						{
-							excelDate in tradesByDay ?
-								<div>
-									<p>
-										pnl: {tradesByDay[excelDate].reduce((acc, trade) => acc + trade.pnl, 0).toFixed(2)}
-									</p>
-									<p>
-										commission: {tradesByDay[excelDate].reduce((acc, trade) => acc + trade.commission, 0).toFixed(2)}
-									</p>
-									<p>
-										trades: {tradesByDay[excelDate].length}
-									</p>
-								</div>
-								:
-								<div>No trades</div>
-						}
-					</div>
-				);
-				excelDate += 1;
-				curDay += 1;
-			}
+	function createCalendar() {
+		const curDate = new Date();
+		const curYear = curDate.getFullYear();
+		const curMonth = curDate.getMonth();
+		const curDay = curDate.getDay();
+		const firstOfMonth = new Date(curYear, curMonth, 1);
+		const firstDay = firstOfMonth.getDay();
+		const firstDate = firstOfMonth.getDate();
+		const endOfMonth = new Date(curYear, curMonth + 1, 0);
+		const lastDay = endOfMonth.getDay();
+		const lastDate = endOfMonth.getDate();
+		const days = [];
+
+		for (let i = 0; i < firstDay; i+=1) {
+			let tempDate = new Date();
+			days.push(new Date(curYear, curMonth, 0 - i));
 		}
-		let curDate = date;
-		while (curDay < 7) {
-			week.push(
-				<div key={nanoid()} className="weekday">
-					<Link to="/day/{}"> {curDate} {dayDict[curDay]}</Link>
-					{
-						excelDate in tradesByDay ?
-							<div>
-								<p>
-									pnl: {tradesByDay[excelDate].reduce((acc, trade) => acc + trade.pnl, 0).toFixed(2)}
-								</p>
-								<p>
-									commission: {tradesByDay[excelDate].reduce((acc, trade) => acc + trade.commission, 0).toFixed(2)}
-								</p>
-								<p>
-									trades: {tradesByDay[excelDate].length}
-								</p>
-							</div>
-							:
-							<div>No trades</div>
-					}
+		days.reverse()
+		for (let i = firstDate; i <= endOfMonth.getDate(); i += 1) {
+			days.push(new Date(curYear, curMonth, i));
+		}
+		for (let i = lastDay + 1; i < 7; i += 1) {
+			days.push(new Date(curYear, curMonth, lastDate + (i - lastDay)));
+		}
+		const weeks: any = [];
+		days.forEach((day: Date, idx: number) => {
+			let d = dateToExcel(day);
+			const dayHtml = (
+				<div key={idx} className="day">
+					<div>{day.getDate()}</div>
+					<div>{dayDict[day.getDay()]}</div>
+					<div>{d in tradesByDay ? <DollarVal val={getPnl(tradesByDay[d].trades)} /> : ""}</div>
+					 
 				</div>
 			);
-			excelDate += 1;
-			curDay += 1;
-			curDate += 1;
-		}
-		return week;
+			if (idx % 7 === 0) {
+				weeks.push([dayHtml]);
+			} else {
+				weeks[weeks.length - 1].push(dayHtml);
+			}
+		});
+		return weeks;
 	}
 
-	function dateToExcel(date: Date) {
-		return 25569.0 + ((date.getTime() - (date.getTimezoneOffset() * 60 * 1000)) / (1000 * 60 * 60 * 24));
-	}
+	const weeks = createCalendar().map((week: any, idx: number) => {
+		return (<div key={idx} className="week-container">{week}</div>);
+	});
 
 	return (
-		<div className="month">
-			{weeks}
+		<div className="calendar-container">
+			<div className="month-container">
+				{weeks}
+			</div>
 		</div>
 	);
-}
-
-export function loader({ request }: any) {
-	const url = new URL(request.url);
-	const tradeParams: { [key: string]: string } = {
-		start_time: url.searchParams.get("start_time") || "",
-		end_time: url.searchParams.get("end_time") || "",
-		short: url.searchParams.get("short") || "",
-		account_names: url.searchParams.get("account_names") || "",
-		include: url.searchParams.get("include") || "",
-	}
-	const queryString = url.searchParams.toString();
-	console.log(`[${fileName}:loader]: searchParams(): `, tradeParams);
-	console.log(`[${fileName}:loader]: queryString: `, queryString);
-	return getTrades(tradeParams);
 }

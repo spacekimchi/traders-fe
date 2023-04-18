@@ -26,11 +26,6 @@ const router = createBrowserRouter(createRoutesFromElements(
 			<Route path="/journal" element={<Journal />} loader={journalLoader} errorElement={<ErrorBoundary />} />
 			<Route path="/calendar" element={<CalendarView />} >
 				<Route index element={<Month />} loader={tradesMonthLoader} />
-				<Route path="month/:start_time/:stop_time" element={<Month />} />
-				<Route path=":trades_view(day|week|month|year)" element={<TradesView />}>
-					<Route index element={<Month />} loader={tradesMonthLoader} />
-					<Route path=":trades_view(day|week|month|year)/:trades_date" element={<TradesDate />} />
-				</Route>
 			</Route>
 			<Route path="/statistics" element={<Statistics />} />
 			<Route path="/trades" element={<Trades />} loader={tradesLoader} errorElement={<ErrorBoundary />} />

@@ -26,7 +26,6 @@ export default function ImportPage(props: any) {
 			console.log(response.statusText, response.status);
 		}
 		console.log('response: ', response);
-
 	}
 
 	return (

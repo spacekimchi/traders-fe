@@ -26,7 +26,6 @@ function queryParamBuilder(params: { [key: string]: string }) {
 export async function getTrades(qp: { [key: string]: string }) {
 	let response = await fetch(`${ROUTES.trades}${queryParamBuilder(qp)}`);
 	if (!response.ok) {
-		console.log('response: ', response);
 		throw { message: `Failed to fetch trades: ${response.statusText}`, status: response.status };
 	}
 	return response;
@@ -110,7 +109,6 @@ export async function post(route: string, body: any) {
 		},
 	});
 	if (!response.ok) {
-		console.log('error response ', response);
 		throw { message: `Failed to create journal entry: ${response.statusText}`, status: response.status };
 	}
 	return response;

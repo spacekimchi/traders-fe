@@ -8,7 +8,6 @@ const fileName = "RootLayout.tsx";
 
 export default function RootLayout(props: any) {
 	const authContext = useContext(AuthContext);
-	console.log(`[${fileName}] authContext.currentUser: `, authContext.currentUser);
 	const [userLoggedIn, setUserLoggedIn] = useState(authContext.currentUser !== "0");
 	useEffect(() => {
 		setUserLoggedIn(authContext.currentUser !== "0");
