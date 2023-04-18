@@ -3,11 +3,10 @@ import { Trade, JournalEntry, Account } from '../utils/types';
 import { excelToDate, excelToTime } from '../utils/helpers';
 import JournalEntryForm from '../JournalEntryForm/JournalEntryForm';
 import { post } from '../utils/api';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import { Cloudinary } from "@cloudinary/url-gen";
-import { AdvancedImage } from '@cloudinary/react';
-import { fill, scale } from "@cloudinary/url-gen/actions/resize";
 import DollarVal from '../DollarVal/DollarVal';
+import { AuthContext } from '../utils/AuthContext';
 
 interface JournalItemProps {
 	dayTrades: Array<Trade>,
@@ -18,6 +17,7 @@ interface JournalItemProps {
 }
 
 export default function JournalItem(props: JournalItemProps) {
+	const authContext = useContext(AuthContext);
 	const [journalEntry, setJournalEntry] = useState(props.journalEntry);
 	const [showMore, setShowMore] = useState(false);
 	const [formImageUrls, setFormImageUrls] = useState(journalEntry.image_urls);
@@ -198,15 +198,19 @@ export default function JournalItem(props: JournalItemProps) {
 	const showMoreSection = (
 		<div className="journal-item-more-container">
 			{img_urls}
-			<JournalEntryForm
-				day={props.day}
-				submitForm={submitForm}
-				notes={formNotes}
-				setNotes={setFormNotes}
-				imageUrls={formImageUrls}
-				setImageUrls={setFormImageUrls}
-				formErrors={formErrors}
-			/>
+			{
+				authContext.currentUser !== "0" ?
+				<JournalEntryForm
+					day={props.day}
+					submitForm={submitForm}
+					notes={formNotes}
+					setNotes={setFormNotes}
+					imageUrls={formImageUrls}
+					setImageUrls={setFormImageUrls}
+					formErrors={formErrors}
+				/> :
+				null
+			}
 		</div>
 	);
 
@@ -234,8 +238,8 @@ export default function JournalItem(props: JournalItemProps) {
 				<div className="journal-item-main">
 					{
 						showMore ?
-							(<button type="button" className="journal-item-info-button">Click to hide</button>) :
-							<button type="button" className="">Click for more</button>
+						<button type="button" className="journal-item-info-button">Click to hide</button> :
+						<button type="button" className="">Click for more</button>
 					}
 				</div>
 			</div>
@@ -245,7 +249,7 @@ export default function JournalItem(props: JournalItemProps) {
 			{
 				showMore ?
 					showMoreSection :
-					<></>
+					null
 			}
 		</div>
 	);
