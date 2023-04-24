@@ -9,14 +9,15 @@ const fileName = "RootLayout.tsx";
 export default function RootLayout(props: any) {
 	const authContext = useContext(AuthContext);
 	const [userLoggedIn, setUserLoggedIn] = useState(authContext.currentUser !== "0");
+
 	useEffect(() => {
 		setUserLoggedIn(authContext.currentUser !== "0");
 	}, [authContext.currentUser]);
+
 	return (
 		<div className="app-container">
 			<TopBar userLoggedIn={userLoggedIn} setCurrentUser={authContext.setCurrentUser} />
 			<div className="main-page">
-				<UserNav userLoggedIn={userLoggedIn}></UserNav>
 				<div className="main-content">
 					<Outlet />
 				</div>

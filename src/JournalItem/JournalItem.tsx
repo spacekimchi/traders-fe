@@ -7,23 +7,29 @@ import { useState, useEffect, useContext } from 'react';
 import { Cloudinary } from "@cloudinary/url-gen";
 import DollarVal from '../DollarVal/DollarVal';
 import { AuthContext } from '../utils/AuthContext';
+import ReactMarkdown from 'react-markdown';
 
 interface JournalItemProps {
 	dayTrades: Array<Trade>,
 	day: string,
 	journalEntry: JournalEntry,
 	cloudinary: Cloudinary,
-	accountsById: { [key: string]: Account },
+	accountsById: { [key: string]: Account }
 }
 
 export default function JournalItem(props: JournalItemProps) {
 	const authContext = useContext(AuthContext);
 	const [journalEntry, setJournalEntry] = useState(props.journalEntry);
 	const [showMore, setShowMore] = useState(false);
-	const [formImageUrls, setFormImageUrls] = useState(journalEntry.image_urls);
+	const [formImageUrls, setFormImageUrls] = useState(journalEntry.image_urls.map((ids) => {
+		/* https://drive.google.com/file/d/19ZEl8nhZt7E4-LByo_XO-L_UEORqJpBv/view?usp=share_link */
+		/* https://drive.google.com/uc?id=1NPxxaxh8eD1SAT6MXCaAZnlqJEdH-vsR */
+		return "https://drive.google.com/file/d/" + ids;
+	}));
 	const [formNotes, setFormNotes] = useState(journalEntry.notes);
 	const [formErrors, setFormErrors] = useState(new Set());
 	const date = excelToDate(Number(props.day)).toDateString();
+	const [notesChanged, setNotesChanged] = useState(false);
 	let shortsCount = 0;
 	let shortsWins = 0;
 	let shortsPnl = 0;
@@ -85,7 +91,7 @@ export default function JournalItem(props: JournalItemProps) {
 	});
 
 	const mainTradesSection = (
-		<div>
+		<div className="journal-item-main__item">
 			<div className="gross-pnl">
 				<DollarVal val={(shortsPnl + longsPnl).toFixed(2)} />
 			</div>
@@ -111,7 +117,10 @@ export default function JournalItem(props: JournalItemProps) {
 	);
 
 	const winningTradesSection = (
-		<div>
+		<div className="journal-item-main__item">
+			<div>
+				Winning Trades
+			</div>
 			<div>
 				# of winning trades: {winningTrades.length}
 			</div>
@@ -137,7 +146,10 @@ export default function JournalItem(props: JournalItemProps) {
 	);
 
 	const losingTradesSection = (
-		<div>
+		<div className="journal-item-main__item">
+			<div>
+				Losing Trades
+			</div>
 			<div>
 				# of losing trades: {losingTrades.length}
 			</div>
@@ -181,7 +193,8 @@ export default function JournalItem(props: JournalItemProps) {
 		}
 		let response = await post('journalEntries', { notes: formNotes, entry_date: Number(props.day), image_urls: imageIds });
 		journalEntry.notes = formNotes;
-		journalEntry.image_urls = formImageUrls;
+		journalEntry.image_urls = imageIds;
+		console.log("journalEntry.image_urls: ", journalEntry.image_urls);
 		setJournalEntry(Object.assign({}, journalEntry));
 	}
 
@@ -189,8 +202,8 @@ export default function JournalItem(props: JournalItemProps) {
 		let imgUrl = `https://drive.google.com/uc?export=view&id=${imgId}`;
 		let imgHref = `https://drive.google.com/file/d/${imgId}`;
 		return (
-			<a key={idx} href={imgHref} target="_blank">
-				<img className="img-loading" src={imgUrl} style={{ width: "100%", height: "auto" }} />
+			<a key={idx} href={imgHref} target="_blank" rel="noreferrer">
+				<img className="img-loading" alt="" src={imgUrl} style={{ width: "100%", height: "auto" }} />
 			</a>
 		);
 	});
@@ -198,19 +211,19 @@ export default function JournalItem(props: JournalItemProps) {
 	const showMoreSection = (
 		<div className="journal-item-more-container">
 			{img_urls}
-			{
-				authContext.currentUser !== "0" ?
-				<JournalEntryForm
-					day={props.day}
-					submitForm={submitForm}
-					notes={formNotes}
-					setNotes={setFormNotes}
-					imageUrls={formImageUrls}
-					setImageUrls={setFormImageUrls}
-					formErrors={formErrors}
-				/> :
-				null
-			}
+	{
+		authContext.currentUser !== "0" ?
+		<JournalEntryForm
+			day={props.day}
+			submitForm={submitForm}
+			notes={formNotes}
+			setNotes={setFormNotes}
+			imageUrls={formImageUrls}
+			setImageUrls={setFormImageUrls}
+			formErrors={formErrors}
+		/> :
+	null
+}
 		</div>
 	);
 
@@ -223,33 +236,25 @@ export default function JournalItem(props: JournalItemProps) {
 			</div>
 			<div onClick={() => { setShowMore(!showMore) }}>
 				<div className="journal-item-main">
-					<div className="journal-item-main__item">
-						{mainTradesSection}
-					</div>
-					<div className="journal-item-main__item">
-						Winning Trades
-						{winningTradesSection}
-					</div>
-					<div className="journal-item-main__item">
-						Losing Trades
-						{losingTradesSection}
-					</div>
+					{mainTradesSection}
+					{winningTradesSection}
+					{losingTradesSection}
+				</div>
+				<div className="journal-item-notes-container">
+					<ReactMarkdown>{journalEntry.notes}</ReactMarkdown>
 				</div>
 				<div className="journal-item-main">
 					{
 						showMore ?
-						<button type="button" className="journal-item-info-button">Click to hide</button> :
-						<button type="button" className="">Click for more</button>
+						<button type="button" className="journal-item-info-button"><p>Click to hide</p></button> :
+						<button type="button" className="journal-item-info-button"><p>Click for more</p></button>
 					}
 				</div>
 			</div>
-			<div>
-				{journalEntry.notes}
-			</div>
 			{
 				showMore ?
-					showMoreSection :
-					null
+				showMoreSection :
+				null
 			}
 		</div>
 	);

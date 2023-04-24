@@ -1,13 +1,16 @@
 @import "../stylesheets/variables.scss";
 
 .nav-bar {
-	height: auto;
 	position: fixed;
 	padding: $leftbar-padding;
-	height: 100%;
-	
 	.nav-bar-item:not(:first-child) {
 		margin-top: 4px;
+	}
+	@media only screen and (max-width: 500px) {
+		bottom: 0;
+		width: 100%;
+		display: flex;
+		flex-direction: row;
 	}
 }
 .nav-link {

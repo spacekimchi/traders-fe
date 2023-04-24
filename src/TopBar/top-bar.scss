@@ -3,13 +3,23 @@
 .top-bar {
 	position: fixed;
 	display: flex;
-	background-color: white;
-	border: solid 1px black;
+	padding: 2px;
 	max-width: 1280px;
 	width: 100%;
 	height: 50px;
 	background-image: url("../assets/img-noise-361x370.png");
 	z-index: 99;
+}
+
+.top-bar__links-container {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	padding-left: 5px;
+}
+
+.top-bar__links-title {
+	font-weight: bold;
 }
 
 .top-bar-items {
@@ -18,8 +28,11 @@
 }
 
 .top-bar-items__item {
-	&:not(:first-child) {
-		margin-left: 8px;
-	}
+	font-size: 15px;
+}
+
+.top-bar img {
+	height: 100%;
+	width: 50px;
 }
 

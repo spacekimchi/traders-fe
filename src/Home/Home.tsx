@@ -13,6 +13,7 @@ export default function Home(props: any) {
 	const authContext = useContext(AuthContext);
 	return (
 		<div className="home-container">
+			<p>Welcome to my trading page.</p>
 		</div>
 	);
 }

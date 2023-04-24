@@ -50,6 +50,8 @@ export default function JournalEntryForm(props: any) {
 	}
 
 	function handleImageUrlChange(e: React.FormEvent, idx: number) {
+		/* https://drive.google.com/file/d/19ZEl8nhZt7E4-LByo_XO-L_UEORqJpBv/view?usp=share_link */
+		/* https://drive.google.com/uc?id=1NPxxaxh8eD1SAT6MXCaAZnlqJEdH-vsR */
 		let url = (e.target as HTMLInputElement).value;
 		props.imageUrls[idx] = url;
 		props.setImageUrls([...props.imageUrls]);
@@ -99,7 +101,7 @@ export default function JournalEntryForm(props: any) {
 			  accept=".jpg, .jpeg, .png" />
 			  */}
 			<div>
-				<label htmlFor={`journal-entry-form-notes-${props.day}`}>Notes: </label>
+				<label htmlFor={`journal-entry-form-notes-${props.day}`}>Notes (you can enter markdown formatting here): </label>
 				<textarea id={`journal-entry-form-notes-${props.day}`} className="journal-entry-form-textarea" value={props.notes} onChange={handleNotesChange} />
 			</div>
 			<button type="submit">Submit</button>

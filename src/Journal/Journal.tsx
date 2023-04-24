@@ -58,6 +58,7 @@ export async function loader({ request }: any) {
 		get('accounts', {}).then(res => res.json()),
 		get('journalEntries', {}).then(res => res.json())
 	]);
+
 	return json({ trades, accounts, journalEntries });
 }
 

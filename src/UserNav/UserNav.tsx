@@ -11,12 +11,6 @@ export default function UserNav(props: any) {
 	return (
 		<div className="nav-bar">
 			<div className="nav-bar-item">
-				<Link to="/" className="nav-link">
-					<HomeIcon height={25} width={25} /> Home
-				</Link>
-			</div>
-			<div className="nav-bar-item">
-
 				<Link to="/journal" className="nav-link">
 					<JournalIcon height={25} width={25} /> Journal
 				</Link>

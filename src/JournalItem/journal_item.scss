@@ -14,24 +14,26 @@
 	}
 
 	.journal-item-main {
-		display: flex;
-		justify-content: space-around;
-	}
+		@media only screen and (max-width: 500px) {
+			> .journal-item-main__item:not(:first-child) {
+				margin-top: 15px;
+			}
+		}
+		@media only screen and (min-width: 500px) {
+			display: flex;
+			justify-content: space-around;
 
-	.journal-item-main__item {
-		max-width: 300px;
-		width: 100%;
-
-		&:not(:last-child) {
-			border-right: dashed black 2px;
+			> .journal-item-main__item:not(:first-child) {
+				//margin-left: 50px;
+			}
 		}
 	}
 
-	.journal-item-more-container {
+	.journal-item-notes-container {
+		word-break: break-word;
 	}
 
 	.journal-item-info-button {
-		margin: 14px auto;
 		&:hover {
 			cursor: pointer;
 		}
