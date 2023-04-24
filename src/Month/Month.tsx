@@ -53,13 +53,13 @@ export default function Month(props: any) {
 		11: 31,
 	};
 	const dayDict: { [key: string]: string } = {
-		0: "Sunday",
-		1: "Monday",
-		2: "Tuesday",
-		3: "Wednesday",
-		4: "Thursday",
-		5: "Friday",
-		6: "Saturday",
+		0: "Sun",
+		1: "Mon",
+		2: "Tues",
+		3: "Wed",
+		4: "Thur",
+		5: "Fri",
+		6: "Sat",
 	};
 
 	function getPnl(trades: Array<Trade>) {
@@ -106,11 +106,15 @@ export default function Month(props: any) {
 				</div>
 			);
 			if (idx % 7 === 0) {
-				weeks.push([dayHtml]);
+				if (weeks.length) {
+					weeks[weeks.length - 1].pop();
+				}
+				weeks.push([]);
 			} else {
 				weeks[weeks.length - 1].push(dayHtml);
 			}
 		});
+		weeks[weeks.length - 1].pop();
 		return weeks;
 	}
 
