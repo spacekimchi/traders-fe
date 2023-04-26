@@ -47,6 +47,9 @@ export default function Journal() {
 export async function loader({ request }: any) {
 	const url = new URL(request.url);
 	const tradeParams: { [key: string]: string } = {
+		id: url.searchParams.get("id") || "",
+		entry_time: url.searchParams.get("entry_time") || "",
+		exit_time: url.searchParams.get("exit_time") || "",
 		start_time: url.searchParams.get("start_time") || "",
 		end_time: url.searchParams.get("end_time") || "",
 		short: url.searchParams.get("short") || "",
