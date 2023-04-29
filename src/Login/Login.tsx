@@ -24,7 +24,6 @@ export default function Login(props: any) {
 				navigate("/");
 			})
 			.catch((err) => {
-				console.log(fileName + "error]: err: ", err);
 				setErrorMessage(err.message);
 			});
 	}

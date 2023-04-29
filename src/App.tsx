@@ -24,7 +24,7 @@ const router = createBrowserRouter(createRoutesFromElements(
 			<Route path="/signup" element={<Signup />} />
 			<Route path="/import" element={<ImportPage />} />
 			<Route path="/journal" element={<Journal />} loader={journalLoader} errorElement={<ErrorBoundary />} />
-			<Route path="/calendar" element={<CalendarView />} >
+			<Route path="/calendar" element={<CalendarView />} loader={tradesMonthLoader} >
 				<Route index element={<Month />} loader={tradesMonthLoader} />
 			</Route>
 			<Route path="/statistics" element={<Statistics />} />

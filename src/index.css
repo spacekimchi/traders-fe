@@ -30,7 +30,7 @@ button::-moz-focus-inner {
 }
 
 body {
-	background-image: url("./assets/img-noise-361x370.png");
+    background-image: url('./assets/img-noise-361x370.png');
 	max-width: 1280px;
 	margin: auto;
 	font-family: 'Ubuntu';

@@ -194,7 +194,6 @@ export default function JournalItem(props: JournalItemProps) {
 		let response = await post('journalEntries', { notes: formNotes, entry_date: Number(props.day), image_urls: imageIds });
 		journalEntry.notes = formNotes;
 		journalEntry.image_urls = imageIds;
-		console.log("journalEntry.image_urls: ", journalEntry.image_urls);
 		setJournalEntry(Object.assign({}, journalEntry));
 	}
 

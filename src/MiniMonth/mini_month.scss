@@ -1,0 +1,45 @@
+@import '../stylesheets/_variables.scss';
+
+.mini-month-day {
+    display: inline-block;
+    height: 25px;
+    width: 25px;
+    &.tiny-gain {
+        background-color: $mini-green-1;
+    }
+    &.small-gain {
+        background-color: $mini-green-2;
+    }
+    &.medium-gain {
+        background-color: $mini-green-3;
+    }
+    &.big-gain {
+        background-color: $mini-green-4;
+    }
+    &.tiny-loss {
+        background-color: $mini-red-1;
+    }
+    &.small-loss {
+        background-color: $mini-red-2;
+    }
+    &.medium-loss {
+        background-color: $mini-red-3;
+    }
+    &.big-loss {
+        background-color: $mini-red-4;
+    }
+    &.flat {
+        background-color: $mini-default;
+    }
+}
+
+.mini-month-container {
+    display: inline-block;
+    &:not(:last-child) {
+        margin-right: 5px;
+    }
+}
+
+.mini-month-week {
+    line-height: 0;
+}
