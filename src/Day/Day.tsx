@@ -1,7 +1,3 @@
-interface dayProps {
-	trades: Array<{ instrument: string, action: string, quantity: number, time: number, commission: number, account_display_name: string }>;
-}
-
 export default function Day(props: any) {
 	/* 
 	 * Stats to track

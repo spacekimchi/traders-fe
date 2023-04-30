@@ -1,83 +1,49 @@
-import { useEffect, useState } from 'react';
-import {tradeParams} from '../utils/types';
-import { nanoid } from 'nanoid';
 import './month.scss';
-import { Link, useLoaderData, json } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
-import { getTrades, getAccounts } from '../utils/api';
-import { Account, Trade } from '../utils/types';
-import { dateToExcel, excelToDate, groupTradesByDay, getPnl } from '../utils/helpers';
+import { Account } from '../utils/types';
+import { dateToExcel, groupTradesByDay, getPnl } from '../utils/helpers';
+import { MONTHS, DAYS } from '../utils/constants';
 import DollarVal from '../DollarVal/DollarVal';
+import { useCalendarContext } from '../CalendarView/CalendarView';
+import { SUNDAY, SATURDAY } from '../utils/constants';
 
-const fileName = "Month.tsx";
-
-interface tradesProps {
-    trades: Array<Trade>;
-}
-
-/*
- * good things to track
- * running monthly total
- * weekly pnl
- * 
- */
-
-export async function loader({ request }: any) {
-    const url = new URL(request.url);
-    const tradeParams: { [key: string]: string } = {
-        start_time: url.searchParams.get("start_time") || "",
-        end_time: url.searchParams.get("end_time") || "",
-        short: url.searchParams.get("short") || "",
-        account_names: url.searchParams.get("account_names") || "",
-        include: url.searchParams.get("include") || "",
-    }
-    const [trades, accounts] = await Promise.all([
-        getTrades(tradeParams).then(res => res.json()),
-        getAccounts("").then(res => res.json())
-    ]);
-    return json({ trades, accounts });
-}
-
-export default function Month(props: any) {
-    let loaderData = useLoaderData() as any;
-    const [accounts, setAccounts] = useState(loaderData.accounts);
-    const [trades, setTrades] = useState(loaderData.trades);
+export default function Month() {
+    const { year, month, trades, accounts } = useCalendarContext();
     const simAccount = accounts.find((account: Account) => account.sim);
     let tradesByDay = groupTradesByDay(trades, simAccount);
-    const navigate = useNavigate();
-    const dayDict: { [key: string]: string } = {
-        0: "Sun",
-        1: "Mon",
-        2: "Tues",
-        3: "Wed",
-        4: "Thur",
-        5: "Fri",
-        6: "Sat",
-    };
 
     function createCalendar() {
-        const curDate = new Date();
-        const curYear = curDate.getFullYear();
-        const curMonth = curDate.getMonth();
-        const curDay = curDate.getDay();
-        const firstOfMonth = new Date(curYear, curMonth, 1);
-        const firstDay = firstOfMonth.getDay();
-        const firstDate = firstOfMonth.getDate();
-        const endOfMonth = new Date(curYear, curMonth + 1, 0);
+        const firstOfMonth = new Date(year, month, 1);
+        const daysPerWeek = 5;
+        let firstDay = firstOfMonth.getDay();
+        let curDate = firstOfMonth.getDate();
+        if (firstDay === SATURDAY) {
+            firstDay = 1;
+            curDate += 2;
+        } else if (firstDay === SUNDAY) {
+            firstDay = 1;
+            curDate += 1;
+        }
+        const endOfMonth = new Date(year, month + 1, 0);
         const lastDay = endOfMonth.getDay();
         const lastDate = endOfMonth.getDate();
         const days = [];
 
-        for (let i = 0; i < firstDay; i+=1) {
-            let tempDate = new Date();
-            days.push(new Date(curYear, curMonth, 0 - i));
+        for (let i = 1; i < firstDay; i+=1) {
+            days.push(new Date(year, month, 1 - i));
         }
-        days.reverse()
-        for (let i = firstDate; i <= endOfMonth.getDate(); i += 1) {
-            days.push(new Date(curYear, curMonth, i));
+        days.reverse();
+        while (curDate <= lastDate) {
+            const tempDate = new Date(year, month, curDate);
+            const curDay = tempDate.getDay();
+            if (curDay && curDay < SATURDAY) {
+                days.push(tempDate);
+            }
+            curDate += 1;
         }
-        for (let i = lastDay + 1; i < 7; i += 1) {
-            days.push(new Date(curYear, curMonth, lastDate + (i - lastDay)));
+        if (lastDay && lastDay < SATURDAY) {
+            for (let i = lastDay + 1; i < SATURDAY; i += 1) {
+                days.push(new Date(year, month, lastDate + (i - lastDay)));
+            }
         }
         const weeks: any = [];
         days.forEach((day: Date, idx: number) => {
@@ -85,20 +51,16 @@ export default function Month(props: any) {
             const dayHtml = (
                 <div key={idx} className="day">
                     <div>{day.getDate()}</div>
-                    <div>{dayDict[day.getDay()]}</div>
+                    <div>{DAYS[day.getDay()]}</div>
                     <div>{d in tradesByDay ? <DollarVal val={getPnl(tradesByDay[d].trades).toFixed(2)} /> : ""}</div>
                 </div>
             );
-            if (idx % 7 === 0) {
-                if (weeks.length) {
-                    weeks[weeks.length - 1].pop();
-                }
-                weeks.push([]);
+            if (idx % daysPerWeek === 0) {
+                weeks.push([dayHtml]);
             } else {
                 weeks[weeks.length - 1].push(dayHtml);
             }
         });
-        weeks[weeks.length - 1].pop();
         return weeks;
     }
 
@@ -108,6 +70,9 @@ export default function Month(props: any) {
 
     return (
         <div className="calendar-container">
+            <h2 className="month-name">
+                {MONTHS[month]}
+            </h2>
             <div className="month-container">
                 {weeks}
             </div>

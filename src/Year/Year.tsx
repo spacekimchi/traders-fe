@@ -1,9 +1,10 @@
 import './year.scss';
+import { Outlet } from 'react-router-dom';
 
 export default function Year(props: any) {
 	return (
-		<div className="week">
-			Year
+		<div className="year-container">
+            <Outlet />
 		</div>
 	);
 }

@@ -1,7 +1,54 @@
+@import '../stylesheets/_variables.scss';
+
 .mini-year-container {
+    position: relative;
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
     justify-content: center;
-    margin-bottom: 10px;
+}
+
+.mini-year-months {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-top: 7px;
+}
+
+.mini-year-color-chart-container {
+    height: 20px;
+    display: inline-block;
+    span {
+        padding: 2px;
+        display: inline-block;
+    }
+
+    .big-loss {
+        background-color: $mini-red-4;
+    }
+    .medium-loss {
+        background-color: $mini-red-3;
+    }
+    .small-loss {
+        background-color: $mini-red-2;
+    }
+    .tiny-loss {
+        background-color: $mini-red-1;
+    }
+    .flat {
+        background-color: $mini-default;
+    }
+    .tiny-gain {
+        background-color: $mini-green-1;
+    }
+    .small-gain {
+        background-color: $mini-green-2;
+    }
+    .medium-gain {
+        background-color: $mini-green-3;
+    }
+    .big-gain {
+        background-color: $mini-green-4;
+    }
 }

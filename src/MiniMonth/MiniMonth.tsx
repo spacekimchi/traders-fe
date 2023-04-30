@@ -7,9 +7,11 @@ import { MONTHS } from '../utils/constants';
 
 interface MiniMonthProps {
     month: number,
+    selectedMonth: boolean,
     trades: Array<Trade>,
     date: Date,
     simAccount: Account,
+    setMonth: Function,
 }
 
 export default function MiniMonth(props: MiniMonthProps) {
@@ -96,8 +98,13 @@ export default function MiniMonth(props: MiniMonthProps) {
         });
     }
     return (
-        <span className="mini-month-container">
-            <div>{MONTHS[props.month]}</div>
+        <span
+            onClick={() => {props.setMonth(props.month)}}
+            className={
+                "mini-month-container"
+                .concat(props.selectedMonth ? " active" : "")
+            }>
+            <div className="mini-month-title">{MONTHS[props.month]}</div>
             {weeks}
         </span>
     );
