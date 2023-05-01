@@ -1,10 +1,8 @@
 import { Outlet } from 'react-router-dom';
 import TopBar from '../TopBar/TopBar';
-import UserNav from '../UserNav/UserNav';
 import { useEffect, useState, useContext } from 'react';
 import { AuthContext } from '../utils/AuthContext';
 import './root_layout.scss';
-const fileName = "RootLayout.tsx";
 
 export default function RootLayout(props: any) {
 	const authContext = useContext(AuthContext);

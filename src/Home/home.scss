@@ -1,1 +1,8 @@
 @import "../stylesheets/variables.scss";
+
+.home-container {
+    a {
+        color: $ukraine-blue;
+        text-decoration: underline;
+    }
+}

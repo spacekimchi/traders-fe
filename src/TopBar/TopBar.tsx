@@ -16,16 +16,18 @@ export default function TopBar(props: TopBarProps) {
 
 	let authLinks = (
 		<>
-			<Link to="/login" className="top-bar-items__item">Login</Link>
+			<Link to="/login" className="top-bar-items__auth">Login</Link>
 		</>
 	);
 
 	let navLinks = (
 		<div className="top-bar__links-list">
 			<Link to="/journal" className="top-bar-items__item">Journal </Link> |
-			<Link to="/calendar" className="top-bar-items__item"> Calendar </Link> |
+			<Link to="/calendar" className="top-bar-items__item"> Calendar </Link>
+        {/*
 			<Link to="/statistics" className="top-bar-items__item"> Statistics </Link> |
 			<Link to="/trades" className="top-bar-items__item"> Trades </Link>
+          */}
 		</div>
 	);
 
@@ -43,7 +45,7 @@ export default function TopBar(props: TopBarProps) {
 		<div className="top-bar">
 			<Link to="/" className=""><img src={logo} alt="logo" /></Link>
 			<div className="top-bar__links-container">
-				<span className="top-bar__links-title">Trade better</span>
+                <span className="top-bar__links-title"><Link to="/">Trade better</Link></span>
 				{navLinks}
 			</div>
 			<div className="top-bar-items">
