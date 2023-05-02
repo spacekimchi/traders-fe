@@ -28,3 +28,4 @@ package-lock.json
 /deploy-prod.sh
 
 *.swp
+.tickets_config

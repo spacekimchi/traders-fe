@@ -39,7 +39,7 @@ export default function Home(props: any) {
                 Why use APEX (or any other prop trading firm)
             </h3>
             <p>
-                Trading through a prop firm allows you to learn and practice trading without risking your own money. Your is only the monthly subscription and the one-time PA account fee.
+                Trading through a prop firm allows you to learn and practice trading without risking your own money. Your risk is only the monthly subscription and the one-time PA account fee.
             </p>
             <h3>Example</h3>
             <p>
