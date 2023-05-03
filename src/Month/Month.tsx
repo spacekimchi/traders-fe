@@ -24,7 +24,7 @@ export function useMonthContext() {
 export default function Month(props: any) {
     //const { year, trades, accounts, day, setDay } = useCalendarContext();
     const [month, setMonth] = useState(props.month)
-    const [year] = useState(props.year)
+    const [year, setYear] = useState(props.year)
     const [trades] = useState(props.trades)
     const [accounts] = useState(props.accounts)
     console.log('props: ', props);
@@ -32,9 +32,13 @@ export default function Month(props: any) {
     const navigate = useNavigate();
     let tradesByDay = groupTradesByDay(trades, simAccount);
     //let monthOutlet = (<Month context={{year, month, trades, accounts, day, setDay}} year={year} month={month} trades={trades} accounts={accounts} day={day} setDay={setDay} />);
+    useEffect(() => {
+        setMonth(props.month);
+        setYear(props.year);
+    }, [props.year, props.month]);
 
-    function createCalendar() {
-        const firstOfMonth = new Date(year, month, 1);
+    function createCalendar(y: number, m: number) {
+        const firstOfMonth = new Date(y, m, 1);
         const daysPerWeek = 5;
         let firstDay = firstOfMonth.getDay();
         let curDate = firstOfMonth.getDate();
@@ -91,7 +95,7 @@ export default function Month(props: any) {
         navigate(`/calendar/${year}/${month+1}/${d}`);
     }
 
-    const weeks = createCalendar().map((week: any, idx: number) => {
+    let weeks = createCalendar(year, month).map((week: any, idx: number) => {
         return (<div key={idx} className="week-container">{week}</div>);
     });
 

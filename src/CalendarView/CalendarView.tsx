@@ -2,7 +2,7 @@ import './calendar_view.scss';
 import MiniMonth from '../MiniMonth/MiniMonth';
 import { getTrades, getAccounts } from '../utils/api';
 import { Account, Trade } from '../utils/types';
-import { useLoaderData, json, Outlet, useOutletContext, redirect, useNavigate } from 'react-router-dom';
+import { useLoaderData, json, useOutletContext, redirect, useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { dateToExcel, groupTradesByMonth } from '../utils/helpers';
 import { MONTHS_MAX } from '../utils/constants';
@@ -21,7 +21,7 @@ export function useCalendarContext() {
     return useOutletContext<ContextType>();
 }
 
-export async function loader({ request, params }: any) {
+export async function loader({ params }: any) {
     const today = new Date();
     const monthParam = params["month"];
     let year = params["year"] ? +params["year"] : today.getFullYear();
@@ -61,10 +61,14 @@ export default function CalendarView() {
     let tradesByMonth = groupTradesByMonth(trades, simAccount);
     let months = [];
 
+    useEffect(() => {
+        console.log('canendarview useeffect');
+    }, []);
+
     function handleSetMonth(e: any, m: number) {
         e.preventDefault();
         setMonth(m);
-        navigate(`/calendar/${year}/${m}`);
+        navigate(`/calendar/${year}/${m+1}`);
     }
 
     for (let i = 0; i < MONTHS_MAX; i++) {
