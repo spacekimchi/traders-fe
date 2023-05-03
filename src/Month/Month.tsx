@@ -103,7 +103,6 @@ export default function Month(props: any) {
             <div className="month-container">
                 {weeks}
             </div>
-            <Outlet />
         </div>
     );
 }
