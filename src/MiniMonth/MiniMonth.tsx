@@ -11,11 +11,12 @@ interface MiniMonthProps {
     trades: Array<Trade>,
     date: Date,
     simAccount: Account,
-    setMonth: Function,
+    handleSetMonth: Function,
 }
 
 export default function MiniMonth(props: MiniMonthProps) {
     let weeks = makeWeeks();
+
     function setDefaultWeek() {
         return [
             {display: false, pnl: 0},
@@ -47,6 +48,7 @@ export default function MiniMonth(props: MiniMonthProps) {
         } else {
             pnlClass = "big-loss";
         }
+
         return (
             <span
                 key={nanoid()}
@@ -56,6 +58,7 @@ export default function MiniMonth(props: MiniMonthProps) {
             </span>
         );
     }
+
     function makeWeeks() {
         let curWeeks = [];
         let last = dateToExcel(new Date(props.date.getFullYear(), props.month + 1, 0));
@@ -97,9 +100,10 @@ export default function MiniMonth(props: MiniMonthProps) {
             return (<div key={nanoid()} className="mini-month-week">{week}</div>);
         });
     }
+
     return (
         <span
-            onClick={() => {props.setMonth(props.month)}}
+            onClick={(e) => {props.handleSetMonth(e, props.month)}}
             className={
                 "mini-month-container"
                 .concat(props.selectedMonth ? " active" : "")

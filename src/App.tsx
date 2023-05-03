@@ -11,7 +11,7 @@ import RootLayout from './RootLayout/RootLayout';
 import ImportPage from './ImportPage/ImportPage';
 import { loader as tradesLoader } from './Trades/Trades';
 import { getCurrentUser } from './utils/api';
-import { Route, RouterProvider, createBrowserRouter, createRoutesFromElements, useRouteError, defer } from "react-router-dom";
+import { Route, RouterProvider, createBrowserRouter, createRoutesFromElements, useRouteError, defer, Navigate } from "react-router-dom";
 import { AuthLayout } from './AuthLayout/AuthLayout';
 import { loader as journalLoader } from './Journal/Journal';
 
@@ -25,7 +25,7 @@ const router = createBrowserRouter(createRoutesFromElements(
 			<Route path="/journal" element={<Journal />} loader={journalLoader} errorElement={<ErrorBoundary />} />
             <Route path="/calendar/:year?" element={<CalendarView />} loader={calendarViewLoader} >
                 <Route path=":month?" element={<Month />} >
-                    <Route path=":day?" element={<Day />} />
+                    <Route path=":day" element={<Day />} />
                 </Route>
 			</Route>
 			<Route path="/statistics" element={<Statistics />} />

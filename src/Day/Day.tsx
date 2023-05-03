@@ -39,7 +39,7 @@ export default function Day(props: any) {
 
 	return (
 		<div className="day">
-			Welcome to the day view
+            el dia
 		</div>
 	);
 }

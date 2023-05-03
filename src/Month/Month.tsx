@@ -1,15 +1,37 @@
 import './month.scss';
-import { Account } from '../utils/types';
+import { Account, Trade } from '../utils/types';
 import { dateToExcel, groupTradesByDay, getPnl } from '../utils/helpers';
 import { MONTHS, DAYS } from '../utils/constants';
 import DollarVal from '../DollarVal/DollarVal';
 import { useCalendarContext } from '../CalendarView/CalendarView';
 import { SUNDAY, SATURDAY } from '../utils/constants';
+import { useLoaderData, json, Outlet, useOutletContext, redirect, useNavigate } from 'react-router-dom';
+import { useState, useEffect } from 'react';
 
-export default function Month() {
-    const { year, month, trades, accounts } = useCalendarContext();
+type ContextType = {
+    year: number,
+    month: number,
+    trades: Array<Trade>,
+    accounts: Array<Account>,
+    day: number | null,
+    setDay: Function,
+};
+
+export function useMonthContext() {
+    return useOutletContext<ContextType>();
+}
+
+export default function Month(props: any) {
+    //const { year, trades, accounts, day, setDay } = useCalendarContext();
+    const [month, setMonth] = useState(props.month)
+    const [year] = useState(props.year)
+    const [trades] = useState(props.trades)
+    const [accounts] = useState(props.accounts)
+    console.log('props: ', props);
     const simAccount = accounts.find((account: Account) => account.sim);
+    const navigate = useNavigate();
     let tradesByDay = groupTradesByDay(trades, simAccount);
+    //let monthOutlet = (<Month context={{year, month, trades, accounts, day, setDay}} year={year} month={month} trades={trades} accounts={accounts} day={day} setDay={setDay} />);
 
     function createCalendar() {
         const firstOfMonth = new Date(year, month, 1);
@@ -46,12 +68,12 @@ export default function Month() {
             }
         }
         const weeks: any = [];
-        days.forEach((day: Date, idx: number) => {
-            let d = dateToExcel(day);
+        days.forEach((curDay: Date, idx: number) => {
+            let d = dateToExcel(curDay);
             const dayHtml = (
-                <div key={idx} className="day">
-                    <div>{day.getDate()}</div>
-                    <div>{DAYS[day.getDay()]}</div>
+                <div key={idx} className="month-day" onClick={(e) => handleDayClick(e, curDay.getDate())}>
+                    <div>{curDay.getDate()}</div>
+                    <div>{DAYS[curDay.getDay()]}</div>
                     <div>{d in tradesByDay ? <DollarVal val={getPnl(tradesByDay[d].trades).toFixed(2)} /> : ""}</div>
                 </div>
             );
@@ -62,6 +84,11 @@ export default function Month() {
             }
         });
         return weeks;
+    }
+
+    function handleDayClick(e: any, d: any) {
+        e.preventDefault();
+        navigate(`/calendar/${year}/${month+1}/${d}`);
     }
 
     const weeks = createCalendar().map((week: any, idx: number) => {
@@ -76,6 +103,7 @@ export default function Month() {
             <div className="month-container">
                 {weeks}
             </div>
+            <Outlet />
         </div>
     );
 }
