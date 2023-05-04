@@ -24,7 +24,7 @@ const router = createBrowserRouter(createRoutesFromElements(
 			<Route path="/import" element={<ImportPage />} />
 			<Route path="/journal" element={<Journal />} loader={journalLoader} errorElement={<ErrorBoundary />} />
             <Route path="/calendar/:year?" element={<CalendarView />} loader={calendarViewLoader} >
-                <Route path=":month?" element={<Month />} >
+                <Route path=":month" element={<Month />} >
                     <Route path=":day" element={<Day />} />
                 </Route>
 			</Route>
