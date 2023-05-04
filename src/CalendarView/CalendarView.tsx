@@ -2,8 +2,8 @@ import './calendar_view.scss';
 import MiniMonth from '../MiniMonth/MiniMonth';
 import { getTrades, getAccounts } from '../utils/api';
 import { Account, Trade } from '../utils/types';
-import { useLoaderData, json, Outlet, useOutletContext, redirect } from 'react-router-dom';
-import { useState } from 'react';
+import { useLoaderData, json, Outlet, useOutletContext, redirect, useParams } from 'react-router-dom';
+import { useState, useEffect } from 'react';
 import { dateToExcel, groupTradesByMonth } from '../utils/helpers';
 import { MONTHS_MAX } from '../utils/constants';
 
@@ -12,7 +12,9 @@ type ContextType = {
     month: number,
     trades: Array<Trade>,
     accounts: Array<Account>,
+    setMonth: Function,
     day: number | null,
+    setDay: Function,
 };
 
 export function useCalendarContext() {
@@ -51,11 +53,15 @@ export default function CalendarView() {
     const [trades] = useState(loaderData.trades);
     const [year] = useState(loaderData.year);
     const [month, setMonth] = useState(loaderData.month);
-    const [day] = useState(loaderData.day);
+    const [day, setDay] = useState(loaderData.day);
     const simAccount = accounts.find((account: Account) => account.sim);
 
     let tradesByMonth = groupTradesByMonth(trades, simAccount);
     let months = [];
+
+    useEffect(() => {
+    }, [month]);
+
     for (let i = 0; i < MONTHS_MAX; i++) {
         months.push(
             <MiniMonth
@@ -86,7 +92,7 @@ export default function CalendarView() {
                     {months}
                 </div>
             </div>
-            <Outlet context={{year, month, trades, accounts, day}}/>
+            <Outlet context={{year, month, trades, accounts, day, setMonth, setDay}}/>
         </div>
     );
 }

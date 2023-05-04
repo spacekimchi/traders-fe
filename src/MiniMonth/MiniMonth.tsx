@@ -3,6 +3,7 @@ import { Trade, Account } from '../utils/types';
 import { nanoid } from 'nanoid';
 import { groupTradesByDay, dateToExcel, getPnl } from '../utils/helpers';
 import { ReactElement } from 'react';
+import { useNavigate } from "react-router-dom";
 import { MONTHS } from '../utils/constants';
 
 interface MiniMonthProps {
@@ -16,6 +17,7 @@ interface MiniMonthProps {
 
 export default function MiniMonth(props: MiniMonthProps) {
     let weeks = makeWeeks();
+    const navigate = useNavigate();
     function setDefaultWeek() {
         return [
             {display: false, pnl: 0},
@@ -97,9 +99,15 @@ export default function MiniMonth(props: MiniMonthProps) {
             return (<div key={nanoid()} className="mini-month-week">{week}</div>);
         });
     }
+
+    function handleSetMonth(e: any, m: number) {
+        props.setMonth(props.month);
+        navigate(`/calendar/${props.date.getFullYear()}/${m+1}`);
+    }
+
     return (
         <span
-            onClick={() => {props.setMonth(props.month)}}
+            onClick={(e) => {handleSetMonth(e, props.month)}}
             className={
                 "mini-month-container"
                 .concat(props.selectedMonth ? " active" : "")
