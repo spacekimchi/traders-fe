@@ -2,8 +2,10 @@
 
 .mini-month-day {
     display: inline-block;
-    height: 25px;
-    width: 25px;
+    height: 22px;
+    width: 22px;
+    border-radius: 3px;
+    margin: 1px;
     &.tiny-gain {
         background-color: $mini-green-1;
     }
