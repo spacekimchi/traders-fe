@@ -6,34 +6,81 @@
     width: 22px;
     border-radius: 3px;
     margin: 1px;
+    position: relative;
+
     &.tiny-gain {
         background-color: $mini-green-1;
     }
+
     &.small-gain {
         background-color: $mini-green-2;
     }
+
     &.medium-gain {
         background-color: $mini-green-3;
     }
+    
     &.big-gain {
         background-color: $mini-green-4;
     }
+
     &.tiny-loss {
         background-color: $mini-red-1;
     }
+
     &.small-loss {
         background-color: $mini-red-2;
     }
+
     &.medium-loss {
         background-color: $mini-red-3;
     }
+
     &.big-loss {
         background-color: $mini-red-4;
     }
+
     &.flat {
         background-color: $mini-default;
     }
+
+    .mini-month-hover {
+        display: none;
+        background-color: $mini-day-hover-bg;
+        padding-top: 2px;
+        color: black;
+        position: absolute;
+        border-radius: 5px;
+        bottom: 125%;
+        z-index: 99;
+        width: 235px;
+        height: 100%;
+        text-align: center;
+        line-height: normal;
+        left: 50%;
+        transform: translate(-50%, 0);
+        
+        &:after {
+            content:'';
+            position: absolute;
+            left: 0;
+            right: 0;
+            margin: 0 auto;
+            width: 0;
+            height: 0;
+            // bottom and border-top px must match
+            bottom: -5px;
+            border-top: 5px solid $mini-day-hover-bg;
+            border-left: 5px solid transparent;
+            border-right: 5px solid transparent;
+        }
+    }
+
+    &:hover > .mini-month-hover {
+        display: block;
+    }
 }
+
 
 .mini-month-container {
     display: inline-block;
