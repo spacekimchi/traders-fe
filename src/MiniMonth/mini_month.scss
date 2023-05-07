@@ -76,8 +76,10 @@
         }
     }
 
-    &:hover > .mini-month-hover {
-        display: block;
+    @media (hover: hover) {
+        &:hover > .mini-month-hover {
+            display: block;
+        }
     }
 }
 
